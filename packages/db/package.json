@@ -1,0 +1,23 @@
+{
+  "name": "@leetcraft/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "generate": "pnpx prisma generate",
+    "migrate": "pnpx prisma migrate dev",
+    "migrate-deploy": "pnpx prisma migrate deploy",
+    "studio": "pnpx prisma studio",
+    "build": "pnpm generate && npx tsc"
+  },
+  "devDependencies": {
+    "@leetcraft/typescript-config": "workspace:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.6.0"
+  }
+}
