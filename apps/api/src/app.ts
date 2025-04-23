@@ -1,5 +1,5 @@
 import express, { Application, Request } from 'express';
-import { ApiError, NotFoundError } from '@/lib/ApiError';
+import { NotFoundError } from '@/lib/ApiError';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,6 +7,8 @@ import limiter from '@/middlewares/rate-limiter.middleware';
 import { errorHandler } from '@/middlewares/error.middleware';
 import { requestLogger } from '@/middlewares/request.middleware';
 import router from '@/routes';
+import authMiddleware from './middlewares/auth.middleware';
+import { API_PREFIX } from './lib/constants';
 
 const app: Application = express();
 
@@ -21,8 +23,11 @@ app.use(limiter);
 // Log all incoming requests
 app.use(requestLogger);
 
+// Authentication Middleware
+app.use(authMiddleware);
+
 // API routes
-app.use('/api/v1', router);
+app.use(API_PREFIX, router);
 
 // 404 handler for undefined routes
 app.use((req: Request) => {
