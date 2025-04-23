@@ -1,0 +1,17 @@
+name: 'Leetcraft'
+
+services:
+  db:
+    container_name: "Database"
+    image: postgres:17
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: leetcraft
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
