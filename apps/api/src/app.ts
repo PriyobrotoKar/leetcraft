@@ -1,14 +1,15 @@
 import express, { Application, Request } from 'express';
-import { NotFoundError } from '@/lib/ApiError';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
+
+import { NotFoundError } from '@/lib/ApiError';
+import { API_PREFIX } from '@/lib/constants';
 import limiter from '@/middlewares/rate-limiter.middleware';
 import { errorHandler } from '@/middlewares/error.middleware';
 import { requestLogger } from '@/middlewares/request.middleware';
+import verifyToken from '@/middlewares/auth.middleware';
 import router from '@/routes';
-import authMiddleware from './middlewares/auth.middleware';
-import { API_PREFIX } from './lib/constants';
 
 const app: Application = express();
 
@@ -24,7 +25,7 @@ app.use(limiter);
 app.use(requestLogger);
 
 // Authentication Middleware
-app.use(authMiddleware);
+app.use(verifyToken);
 
 // API routes
 app.use(API_PREFIX, router);

@@ -4,14 +4,37 @@ services:
   db:
     container_name: "Database"
     image: postgres:17
+    env_file: judge0.conf
     ports:
       - '5432:5432'
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: leetcraft
     volumes:
       - db:/var/lib/postgresql/data
+
+  judge0:
+    container_name: "Judge0"
+    image: judge0/judge0:1.13.1
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    ports:
+      - "2358:2358"
+    privileged: true
+
+  workers:
+    container_name: "Judge0-Workers"
+    image: judge0/judge0:1.13.1
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+
+  redis:
+    container_name: "Redis"
+    image: redis:7
+    command: [
+      "bash", "-c",
+      'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"'
+    ]
+    env_file: judge0.conf
 
 volumes:
   db:

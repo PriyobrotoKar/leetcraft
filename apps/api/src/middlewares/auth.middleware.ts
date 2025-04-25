@@ -11,7 +11,7 @@ const publicRoutes = [
   `${API_PREFIX}/health`,
 ];
 
-const authMiddleware: RequestHandler = (req, _res, next) => {
+const verifyToken: RequestHandler = (req, _res, next) => {
   // Check if the request is to a public route
   if (publicRoutes.includes(req.path)) {
     return next();
@@ -40,4 +40,4 @@ const authMiddleware: RequestHandler = (req, _res, next) => {
   }
 };
 
-export default authMiddleware;
+export default verifyToken;
