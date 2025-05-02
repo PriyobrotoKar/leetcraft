@@ -1,0 +1,20 @@
+{
+  "name": "@leetcraft/boilerplate-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "devDependencies": {
+    "@leetcraft/eslint-config": "workspace:*",
+    "@leetcraft/typescript-config": "workspace:*",
+    "tsx": "^4.19.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yaml": "^2.7.1"
+  }
+}

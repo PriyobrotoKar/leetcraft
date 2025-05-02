@@ -4,11 +4,20 @@ services:
   db:
     container_name: "Database"
     image: postgres:17
-    env_file: judge0.conf
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: leetcraft
     ports:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+  judge-db:
+    container_name: "Judge0-Database"
+    image: postgres:17
+    env_file: judge0.conf
+    volumes:
+      - judge-db:/var/lib/postgresql/data
 
   judge0:
     container_name: "Judge0"
@@ -37,4 +46,5 @@ services:
     env_file: judge0.conf
 
 volumes:
+  judge-db:
   db:
