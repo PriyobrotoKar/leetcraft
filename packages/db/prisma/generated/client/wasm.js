@@ -139,7 +139,19 @@ exports.Prisma.ProblemScalarFieldEnum = {
   difficulty: 'difficulty',
   structure: 'structure',
   testcases: 'testcases',
+  isValidated: 'isValidated',
   authorId: 'authorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BoilerplateScalarFieldEnum = {
+  id: 'id',
+  languageId: 'languageId',
+  language: 'language',
+  shortCode: 'shortCode',
+  longCode: 'longCode',
+  problemId: 'problemId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -171,7 +183,8 @@ exports.Difficulty = exports.$Enums.Difficulty = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Problem: 'Problem'
+  Problem: 'Problem',
+  Boilerplate: 'Boilerplate'
 };
 
 /**
