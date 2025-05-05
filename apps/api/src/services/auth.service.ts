@@ -4,6 +4,7 @@ import { BadRequestError } from '@/lib/ApiError';
 import { db, User } from '@leetcraft/db';
 import jwt from 'jsonwebtoken';
 import env from '@/config/env';
+import { CurrentUser } from '@/types/auth';
 
 class AuthService {
   async register(dto: RegisterDto) {
@@ -52,7 +53,8 @@ class AuthService {
       {
         id: user.id,
         email: user.email,
-      },
+        role: user.role,
+      } satisfies CurrentUser,
       env.JWT_SECRET,
       {
         expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'],
