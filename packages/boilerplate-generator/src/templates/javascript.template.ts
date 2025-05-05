@@ -9,7 +9,7 @@ export default class JavascriptTemplate extends BaseTemplate {
   }
 
   generateBoilerplateLong(): string {
-    let code = "const readline = require('readline');\n";
+    let code = 'const readline = require("readline");\n';
 
     code += '##USER CODE GOES HERE##\n';
 

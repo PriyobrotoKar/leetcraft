@@ -2,13 +2,16 @@
   "name": "@leetcraft/boilerplate-generator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsup src/index.ts --watch --onSuccess 'node dist/index.js'",
+    "build": "tsup src/index.ts --dts"
   },
   "devDependencies": {
     "@leetcraft/eslint-config": "workspace:*",
     "@leetcraft/typescript-config": "workspace:*",
+    "tsup": "8.3.0",
     "tsx": "^4.19.3"
   },
   "keywords": [],

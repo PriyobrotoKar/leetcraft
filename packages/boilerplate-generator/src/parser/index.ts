@@ -1,10 +1,8 @@
-import { Parameter, Primitive, ProblemSpecification } from '@/types';
+import { Primitive, ProblemSpecification } from '@/types';
 import { parse } from 'yaml';
 
 const validTypes = ['int', 'float', 'string', 'bool'] as const;
-export type ValidTypes = (typeof validTypes)[number];
-
-export const dataTypes = ['integer', 'float', 'string', 'boolean'] as const;
+type ValidTypes = (typeof validTypes)[number];
 
 export const paramToTypeMap: Record<ValidTypes, Primitive> = {
   int: 'integer',
