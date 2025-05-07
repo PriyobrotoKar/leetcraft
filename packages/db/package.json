@@ -12,7 +12,8 @@
     "build": "pnpm generate && npx tsc"
   },
   "devDependencies": {
-    "@leetcraft/typescript-config": "workspace:*"
+    "@leetcraft/typescript-config": "workspace:*",
+    "prisma-json-types-generator": "^3.3.1"
   },
   "keywords": [],
   "author": "",
