@@ -9,10 +9,14 @@ const authController = new AuthController();
 
 authRouter.post(
   '/register',
-  validateSchema(RegisterSchema),
+  validateSchema({ body: RegisterSchema }),
   authController.register,
 );
-authRouter.post('/login', validateSchema(LoginSchema), authController.login);
+authRouter.post(
+  '/login',
+  validateSchema({ body: LoginSchema }),
+  authController.login,
+);
 authRouter.post('/logout', authController.logout);
 authRouter.get('/me', authController.me);
 

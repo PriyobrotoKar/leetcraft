@@ -1,4 +1,5 @@
 import { UnauthorizedError } from '@/lib/ApiError';
+import micromatch from 'micromatch';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { RequestHandler } from 'express';
 import env from '@/config/env';
@@ -8,12 +9,13 @@ import { API_PREFIX } from '@/lib/constants';
 const publicRoutes = [
   `${API_PREFIX}/auth/login`,
   `${API_PREFIX}/auth/register`,
+  `${API_PREFIX}/problem/*/validate/callback`,
   `${API_PREFIX}/health`,
 ];
 
 const verifyToken: RequestHandler = (req, _res, next) => {
   // Check if the request is to a public route
-  if (publicRoutes.includes(req.path)) {
+  if (micromatch.isMatch(req.path, publicRoutes)) {
     return next();
   }
 

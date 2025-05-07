@@ -1,5 +1,3 @@
-import { ZodError } from 'zod';
-
 export class ApiError extends Error {
   statusCode: number;
 
