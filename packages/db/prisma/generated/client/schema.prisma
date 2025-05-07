@@ -39,7 +39,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  problems Problem[]
+  createdProblems Problem[] @relation("CreatedProblems")
+  solvedProblems  Problem[] @relation("SolvedProblems")
 }
 
 model Problem {
@@ -49,12 +50,15 @@ model Problem {
   tags        String[]
   difficulty  Difficulty
   structure   String
+
   /// [TestCase]
   testcases   Json[]
-  isValidated Boolean    @default(false)
+  isValidated Boolean @default(false)
 
-  author   User   @relation(fields: [authorId], references: [id])
+  author   User   @relation("CreatedProblems", fields: [authorId], references: [id])
   authorId String
+
+  solvedBy User[] @relation("SolvedProblems")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -69,7 +73,7 @@ model Boilerplate {
   shortCode  String
   longCode   String
 
-  problem   Problem @relation(fields: [problemId], references: [id])
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
   problemId String
 
   createdAt DateTime @default(now())
