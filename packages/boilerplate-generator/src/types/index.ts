@@ -11,8 +11,7 @@ export const supportedLanguages = [
 
 export type LanguageConfig = (typeof supportedLanguages)[number];
 
-const languages = supportedLanguages.map((lang) => lang.language);
-export type SupportedLanguage = (typeof languages)[number];
+export type SupportedLanguage = (typeof supportedLanguages)[number]['language'];
 
 export type Boilerplate = LanguageConfig & {
   short_code: string;

@@ -9,6 +9,7 @@ export default class JavascriptTemplate extends BaseTemplate {
   }
 
   generateBoilerplateLong(): string {
+    //FIX: Have to fix the type for inputs from stdin based on the problem. Currently, every input is a string.
     let code = 'const readline = require("readline");\n';
 
     code += '##USER CODE GOES HERE##\n';
