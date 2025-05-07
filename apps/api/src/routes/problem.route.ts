@@ -39,4 +39,21 @@ problemRouter.get(
   problemController.getProblemsCreatedByUser,
 );
 
+problemRouter.patch(
+  '/:id',
+  verifyAdmin,
+  validateSchema({
+    body: CreateProblemSchema.partial(),
+    param: z.object({ id: z.string() }),
+  }),
+  problemController.updateProblem,
+);
+
+problemRouter.delete(
+  '/:id',
+  verifyAdmin,
+  validateSchema({ param: z.object({ id: z.string() }) }),
+  problemController.deleteProblem,
+);
+
 export default problemRouter;

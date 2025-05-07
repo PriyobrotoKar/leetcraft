@@ -1,16 +1,15 @@
-import { CreateProblemDto, ValidateProblemDto } from '@/dto/problem.dto';
+import {
+  CreateProblemDto,
+  UpdateProblemDto,
+  ValidateProblemDto,
+} from '@/dto/problem.dto';
 import { BadRequestError } from '@/lib/ApiError';
 import { CurrentUser } from '@/types/auth';
 import {
-  Boilerplate,
+  Boilerplate as BoilerplateType,
   generateBoilerplates,
 } from '@leetcraft/boilerplate-generator';
-import { db } from '@leetcraft/db';
-import {
-  JsonArray,
-  JsonObject,
-  JsonValue,
-} from '@leetcraft/db/prisma/generated/client/runtime/library';
+import { db, Prisma, Problem, Boilerplate } from '@leetcraft/db';
 import JudgeService from './judge.service';
 import redisConnection from '@/config/redis';
 
@@ -22,7 +21,7 @@ class ProblemService {
 
   async createProblem(dto: CreateProblemDto, currentUser: CurrentUser) {
     // Generate Boilerplates
-    let boilerplates: Boilerplate[] = [];
+    let boilerplates: BoilerplateType[] = [];
 
     try {
       boilerplates = generateBoilerplates(dto.structure);
@@ -59,22 +58,13 @@ class ProblemService {
     problemId: string,
     currentUser: CurrentUser,
   ) {
-    const problem = await db.problem.findUnique({
-      where: {
-        id: problemId,
-      },
+    const problem = await this.checkAuthorityOverProblem<{
+      boilerplates: Boilerplate[];
+    }>(problemId, currentUser.id, {
       include: {
         boilerplates: true,
       },
     });
-
-    if (!problem) {
-      throw new BadRequestError('Problem not found');
-    }
-
-    if (problem.authorId !== currentUser.id) {
-      throw new BadRequestError('You are not the author of this problem');
-    }
 
     if (problem.isValidated) {
       throw new BadRequestError('Problem is already validated');
@@ -129,13 +119,9 @@ class ProblemService {
 
     const allTokens = await redisConnection.hgetall(`validate:${problemId}`);
 
-    console.log('All Tokens:', allTokens);
-
     const isAllAccepted = Object.values(allTokens).every((value) =>
       Number(value),
     );
-
-    console.log('Is all accepted:', isAllAccepted);
 
     if (isAllAccepted) {
       await db.problem.update({
@@ -153,14 +139,24 @@ class ProblemService {
     };
   }
 
-  async getAllProblems() {
+  async getAllProblems(currentUser: CurrentUser) {
     const problems = await db.problem.findMany({
       where: {
         isValidated: true,
       },
+      include: {
+        solvedBy: {
+          where: {
+            id: currentUser.id,
+          },
+        },
+      },
     });
 
-    return problems;
+    return problems.map(({ solvedBy, ...problem }) => ({
+      ...problem,
+      isSolved: solvedBy.length > 0,
+    }));
   }
 
   async getProblemsCreatedByUser(currentUser: CurrentUser) {
@@ -171,6 +167,75 @@ class ProblemService {
     });
 
     return problems;
+  }
+
+  async updateProblem(
+    dto: UpdateProblemDto,
+    problemId: string,
+    currentUser: CurrentUser,
+  ) {
+    await this.checkAuthorityOverProblem(problemId, currentUser.id);
+
+    // TODO: Updating structure and testcases is not allowed at the moment. Have to implement this later as this is not a priority.
+    if (dto.structure) {
+      throw new BadRequestError(
+        'Updating structure is not allowed at the moment',
+      );
+    }
+
+    if (dto.testcases) {
+      throw new BadRequestError(
+        'Updating testcases is not allowed at the moment',
+      );
+    }
+
+    const problem = await db.problem.update({
+      where: {
+        id: problemId,
+      },
+      data: {
+        ...dto,
+      },
+    });
+
+    return problem;
+  }
+
+  async deleteProblem(problemId: string, currentUser: CurrentUser) {
+    await this.checkAuthorityOverProblem(problemId, currentUser.id);
+
+    await db.problem.delete({
+      where: {
+        id: problemId,
+      },
+    });
+
+    return {
+      message: 'Problem deleted successfully',
+    };
+  }
+
+  private async checkAuthorityOverProblem<T>(
+    problemId: string,
+    userId: string,
+    query?: Omit<Prisma.ProblemFindUniqueArgs, 'where'>,
+  ): Promise<T & Problem> {
+    const problem = (await db.problem.findUnique({
+      where: {
+        id: problemId,
+      },
+      ...query,
+    })) as T & Problem;
+
+    if (!problem) {
+      throw new BadRequestError('Problem not found');
+    }
+
+    if (problem.authorId !== userId) {
+      throw new BadRequestError('You are not the author of this problem');
+    }
+
+    return problem;
   }
 }
 

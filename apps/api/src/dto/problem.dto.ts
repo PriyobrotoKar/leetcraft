@@ -33,3 +33,6 @@ export const ValidateProblemSchema = z.object({
 });
 
 export type ValidateProblemDto = z.infer<typeof ValidateProblemSchema>;
+
+export const UpdateProblemSchema = CreateProblemSchema.partial();
+export type UpdateProblemDto = z.infer<typeof UpdateProblemSchema>;

@@ -1,4 +1,8 @@
-import { CreateProblemDto, ValidateProblemDto } from '@/dto/problem.dto';
+import {
+  CreateProblemDto,
+  UpdateProblemDto,
+  ValidateProblemDto,
+} from '@/dto/problem.dto';
 import ProblemService from '@/services/problem.service';
 import { HandleRequest } from '@/types/request';
 
@@ -34,8 +38,8 @@ class ProblemController {
     res.status(200).json(result);
   };
 
-  getAllProblems: HandleRequest = async (_req, res) => {
-    const problems = await this.problemService.getAllProblems();
+  getAllProblems: HandleRequest = async (req, res) => {
+    const problems = await this.problemService.getAllProblems(req.user);
     res.status(200).json(problems);
   };
 
@@ -44,6 +48,23 @@ class ProblemController {
       req.user,
     );
     res.status(200).json(problems);
+  };
+
+  updateProblem: HandleRequest<UpdateProblemDto, { id: string }> = async (
+    req,
+    res,
+  ) => {
+    const problem = await this.problemService.updateProblem(
+      req.body,
+      req.params.id,
+      req.user,
+    );
+    res.status(200).json(problem);
+  };
+
+  deleteProblem: HandleRequest<{ id: string }> = async (req, res) => {
+    await this.problemService.deleteProblem(req.params.id, req.user);
+    res.status(204).json();
   };
 }
 
