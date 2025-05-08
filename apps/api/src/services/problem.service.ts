@@ -3,7 +3,7 @@ import {
   UpdateProblemDto,
   ValidateProblemDto,
 } from '@/dto/problem.dto';
-import { BadRequestError } from '@/lib/ApiError';
+import { BadRequestError, ForbiddenError, NotFoundError } from '@/lib/ApiError';
 import { CurrentUser } from '@/types/auth';
 import {
   Boilerplate as BoilerplateType,
@@ -12,6 +12,7 @@ import {
 import { db, Prisma, Problem, Boilerplate } from '@leetcraft/db';
 import JudgeService from './judge.service';
 import redisConnection from '@/config/redis';
+import { replaceBoilerpatePlaceholder } from '@/lib/utils';
 
 class ProblemService {
   judge: JudgeService;
@@ -75,16 +76,16 @@ class ProblemService {
     );
 
     if (!boilerplateForSolution) {
-      throw new BadRequestError('Boilerplate not found for the given language');
+      throw new NotFoundError(
+        `Boilerplate not found for language ${dto.language}`,
+      );
     }
 
     // replace the boilerplate with the solution
-    const fullSolution = boilerplateForSolution.longCode.replace(
-      '##USER CODE GOES HERE##',
+    const fullSolution = replaceBoilerpatePlaceholder(
+      boilerplateForSolution.longCode,
       dto.solution,
     );
-
-    console.log('Full Solution:', fullSolution);
 
     // Validate the solution by running the code along with the test cases
     const submissions = problem.testcases.map((testcase) => ({
@@ -159,6 +160,24 @@ class ProblemService {
     }));
   }
 
+  async getProblemById(problemId: string) {
+    const problem = await db.problem.findUnique({
+      where: {
+        id: problemId,
+        isValidated: true,
+      },
+      include: {
+        boilerplates: true,
+      },
+    });
+
+    if (!problem) {
+      throw new NotFoundError('Problem not found');
+    }
+
+    return problem;
+  }
+
   async getProblemsCreatedByUser(currentUser: CurrentUser) {
     const problems = await db.problem.findMany({
       where: {
@@ -228,11 +247,11 @@ class ProblemService {
     })) as T & Problem;
 
     if (!problem) {
-      throw new BadRequestError('Problem not found');
+      throw new NotFoundError('Problem not found');
     }
 
     if (problem.authorId !== userId) {
-      throw new BadRequestError('You are not the author of this problem');
+      throw new ForbiddenError('You are not the author of this problem');
     }
 
     return problem;

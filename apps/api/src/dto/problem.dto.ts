@@ -1,7 +1,4 @@
-import {
-  SupportedLanguage,
-  supportedLanguages,
-} from '@leetcraft/boilerplate-generator';
+import { Languages } from '@leetcraft/boilerplate-generator';
 import { Difficulty } from '@leetcraft/db';
 import z from 'zod';
 
@@ -22,10 +19,6 @@ export const CreateProblemSchema = z.object({
 });
 
 export type CreateProblemDto = z.infer<typeof CreateProblemSchema>;
-
-const Languages = Object.fromEntries(
-  supportedLanguages.map((lang) => [lang.language, lang.language]),
-) as Record<SupportedLanguage, SupportedLanguage>;
 
 export const ValidateProblemSchema = z.object({
   solution: z.string().min(1, 'Solution is required'),
