@@ -13,6 +13,10 @@ export type LanguageConfig = (typeof supportedLanguages)[number];
 
 export type SupportedLanguage = (typeof supportedLanguages)[number]['language'];
 
+export const Languages = Object.fromEntries(
+  supportedLanguages.map((lang) => [lang.language, lang.language]),
+) as Record<SupportedLanguage, SupportedLanguage>;
+
 export type Boilerplate = LanguageConfig & {
   short_code: string;
   long_code: string;
