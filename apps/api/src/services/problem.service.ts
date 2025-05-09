@@ -93,7 +93,7 @@ class ProblemService {
       language_id: boilerplateForSolution.languageId,
       stdin: testcase.input,
       expected_output: testcase.output,
-      callback_url: `http://host.docker.internal:8000/api/v1/problem/${problemId}/validate/callback`,
+      callback_url: `http://host.docker.internal:8000/api/v1/problems/${problemId}/validate/callback`,
     }));
 
     const judgeResponse = await this.judge.submitBatch(submissions);

@@ -9,7 +9,8 @@ import { API_PREFIX } from '@/lib/constants';
 const publicRoutes = [
   `${API_PREFIX}/auth/login`,
   `${API_PREFIX}/auth/register`,
-  `${API_PREFIX}/problem/*/validate/callback`,
+  `${API_PREFIX}/problems/*/validate/callback`,
+  `${API_PREFIX}/submissions/*/callback`,
   `${API_PREFIX}/health`,
 ];
 
