@@ -39,8 +39,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdProblems Problem[] @relation("CreatedProblems")
-  solvedProblems  Problem[] @relation("SolvedProblems")
+  createdProblems Problem[]    @relation("CreatedProblems")
+  solvedProblems  Problem[]    @relation("SolvedProblems")
+  submissions     Submission[]
 }
 
 model Problem {
@@ -64,6 +65,7 @@ model Problem {
   updatedAt DateTime @updatedAt
 
   boilerplates Boilerplate[]
+  submissions  Submission[]
 }
 
 model Boilerplate {
@@ -75,6 +77,30 @@ model Boilerplate {
 
   problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
   problemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Submission {
+  id              String  @id @default(cuid())
+  status          Int?
+  message         String?
+  solution        String
+  language        String
+  time            Int?
+  memory          Int?
+  stdin           String?
+  stdout          String?
+  stderr          String?
+  exptectedOutput String?
+  testsPassed     Int?
+
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  problemId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
