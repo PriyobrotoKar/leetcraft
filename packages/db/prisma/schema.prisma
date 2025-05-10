@@ -93,6 +93,7 @@ model Submission {
   stdin           String?
   stdout          String?
   stderr          String?
+  output          String?
   exptectedOutput String?
   testsPassed     Int?
 
