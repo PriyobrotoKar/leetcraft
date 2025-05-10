@@ -16,9 +16,23 @@ class SubmissionController {
     res.status(201).json(result);
   };
 
-  submissionCallback: HandleRequest = async (req, res) => {
-    const result = await this.submissionService.submissionCallback(req.body);
+  submissionCallback: HandleRequest<any, { id: string }> = async (req, res) => {
+    const result = await this.submissionService.submissionCallback(
+      req.body,
+      req.params.id,
+    );
     res.status(201).json(result);
+  };
+
+  getSubmissionById: HandleRequest<never, { id: string }> = async (
+    req,
+    res,
+  ) => {
+    const result = await this.submissionService.getSubmissionById(
+      req.params.id,
+      req.user,
+    );
+    res.status(200).json(result);
   };
 }
 

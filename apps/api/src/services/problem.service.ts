@@ -101,7 +101,7 @@ class ProblemService {
 
     console.log(Object.fromEntries(tokens.map((token) => [token, 0])));
 
-    await redisConnection.del(`validate:${problemId}`);
+    await redisConnection.del(`validate:problem:${problemId}`);
 
     return {
       tokens,
@@ -113,12 +113,14 @@ class ProblemService {
     const isAccepted = Number(body.status.id === 3);
 
     await redisConnection.hsetnx(
-      `validate:${problemId}`,
+      `validate:problem:${problemId}`,
       body.token,
       isAccepted,
     );
 
-    const allTokens = await redisConnection.hgetall(`validate:${problemId}`);
+    const allTokens = await redisConnection.hgetall(
+      `validate:problem:${problemId}`,
+    );
 
     const isAllAccepted = Object.values(allTokens).every((value) =>
       Number(value),

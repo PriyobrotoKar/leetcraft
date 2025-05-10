@@ -1,7 +1,7 @@
 import { SubmissionDto, SubmissionResponseDto } from '@/dto/judge.dto';
 
 class JudgeService {
-  baseUrl = 'http://localhost:2358';
+  private readonly baseUrl = 'http://localhost:2358';
 
   constructor() {}
 
@@ -52,6 +52,28 @@ class JudgeService {
       return data.submissions;
     } catch (error: any) {
       throw new Error('Error while validating batch:', error.meesage);
+    }
+  }
+
+  async getSubmission(token: string): Promise<SubmissionResponseDto> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/submissions/${token}?base64_encoded=false&fields=stdin,stdout,stderr,compile_output,message,time,memory,status,expected_output`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to get submission');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      throw new Error('Error while getting submission:', error.meesage);
     }
   }
 }
