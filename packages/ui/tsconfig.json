@@ -1,0 +1,11 @@
+{
+  "extends": "@leetcraft/typescript-config/react-library.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@leetcraft/ui/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*"]
+}
