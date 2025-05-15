@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { IconLoader } from '@tabler/icons-react';
 
 import { cn } from '@leetcraft/ui/lib/utils';
 
@@ -43,10 +44,12 @@ function Button({
   variant,
   size,
   asChild = false,
+  isLoading = false,
   ...props
 }: React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    isLoading?: boolean;
   }) {
   const Comp = asChild ? Slot : 'button';
 
@@ -54,8 +57,20 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      disabled={isLoading}
       {...props}
-    />
+    >
+      <>
+        {isLoading ? (
+          <>
+            <IconLoader size={18} className="mr-2 animate-spin" />
+            Processing
+          </>
+        ) : (
+          <>{props.children}</>
+        )}
+      </>
+    </Comp>
   );
 }
 
