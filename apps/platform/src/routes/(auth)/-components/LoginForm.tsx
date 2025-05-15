@@ -1,6 +1,7 @@
 import { Button } from '@leetcraft/ui/components/button';
 import { Input } from '@leetcraft/ui/components/input';
 import { Separator } from '@leetcraft/ui/components/separator';
+import { useMutation } from '@tanstack/react-query';
 import {
   IconBrandGithubFilled,
   IconBrandGoogleFilled,
@@ -17,7 +18,10 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import AuthService from '@/api/services/auth';
+import { useAuth } from '@/providers/AuthProvider';
+import { toast } from 'sonner';
 
 const LoginSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -27,6 +31,8 @@ const LoginSchema = z.object({
 });
 
 function LoginForm() {
+  const navigate = useNavigate();
+  const { setAuth } = useAuth();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -35,9 +41,25 @@ function LoginForm() {
     },
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: z.infer<typeof LoginSchema>) =>
+      AuthService.login(data),
+    onSuccess: (data) => {
+      setAuth({
+        user: data.user,
+      });
+      navigate({
+        to: '/',
+      });
+    },
+    onError: (error) => {
+      console.error('Login error:', error);
+      toast.error(error.message);
+    },
+  });
+
   const onSubmit = form.handleSubmit((data: z.infer<typeof LoginSchema>) => {
-    console.log('Form submitted:', data);
-    // Handle login logic here
+    mutate(data);
   });
 
   return (
@@ -82,13 +104,15 @@ function LoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="********" />
+                    <Input {...field} type="password" placeholder="********" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="w-full">Login</Button>
+            <Button isLoading={isPending} className="w-full">
+              Login
+            </Button>
           </form>
         </Form>
 

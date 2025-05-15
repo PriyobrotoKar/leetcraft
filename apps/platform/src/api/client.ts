@@ -5,7 +5,7 @@ class ApiClient {
     this.baseUrl = this.baseUrl + service;
   }
 
-  private async fetch(url: string, options?: RequestInit) {
+  private async fetch<T>(url: string, options?: RequestInit): Promise<T> {
     try {
       const response = await fetch(this.baseUrl + url, {
         credentials: 'include',
@@ -14,32 +14,39 @@ class ApiClient {
         },
         ...options,
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      return await response.json();
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
     }
   }
 
-  async get(url: string) {
-    return this.fetch(url);
+  async get<T>(url: string) {
+    return this.fetch<T>(url);
   }
 
-  async post(url: string, body: object) {
-    return this.fetch(url, {
+  async post<T>(url: string, body: object) {
+    return this.fetch<T>(url, {
       method: 'POST',
       body: JSON.stringify(body),
     });
   }
 
-  async put(url: string, body: object) {
-    return this.fetch(url, {
+  async put<T>(url: string, body: object) {
+    return this.fetch<T>(url, {
       method: 'PUT',
       body: JSON.stringify(body),
     });
   }
 
-  async delete(url: string) {
-    return this.fetch(url, {
+  async delete<T>(url: string) {
+    return this.fetch<T>(url, {
       method: 'DELETE',
     });
   }

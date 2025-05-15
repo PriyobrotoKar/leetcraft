@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
-import AuthContextProvider from '../providers/AuthProvider';
+import ReactQueryProvider from '@/providers/ReactQueryProvider';
+import AuthContextProvider from '@/providers/AuthProvider';
+import { Toaster } from '@leetcraft/ui/components/sonner';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -9,9 +11,12 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <React.Fragment>
-      <AuthContextProvider>
-        <Outlet />
-      </AuthContextProvider>
+      <ReactQueryProvider>
+        <AuthContextProvider>
+          <Toaster richColors />
+          <Outlet />
+        </AuthContextProvider>
+      </ReactQueryProvider>
     </React.Fragment>
   );
 }

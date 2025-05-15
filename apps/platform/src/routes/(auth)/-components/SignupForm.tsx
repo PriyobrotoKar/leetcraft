@@ -16,7 +16,11 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { useMutation } from '@tanstack/react-query';
+import AuthService from '@/api/services/auth';
+import { useAuth } from '@/providers/AuthProvider';
+import { toast } from 'sonner';
 
 const SignupSchema = z.object({
   firstname: z.string().nonempty(),
@@ -26,6 +30,8 @@ const SignupSchema = z.object({
 });
 
 function SignupForm() {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
@@ -34,6 +40,36 @@ function SignupForm() {
       email: '',
       password: '',
     },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: z.infer<typeof SignupSchema>) =>
+      AuthService.register({
+        ...data,
+        name: `${data.firstname} ${data.lastname}`,
+      }),
+    onSuccess: async (data, variables) => {
+      await AuthService.login({
+        email: data.email,
+        password: variables.password,
+      });
+
+      setAuth({
+        user: data,
+      });
+
+      navigate({
+        to: '/',
+      });
+    },
+    onError: (error) => {
+      console.error('Signup error:', error);
+      toast.error(error.message);
+    },
+  });
+
+  const onSubmit = form.handleSubmit((data: z.infer<typeof SignupSchema>) => {
+    mutate(data);
   });
 
   return (
@@ -58,10 +94,10 @@ function SignupForm() {
 
       <div className="space-y-6">
         <Form {...form}>
-          <form className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-6">
             <div className="flex gap-6">
               <FormField
-                name="firtname"
+                name="firstname"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First name</FormLabel>
@@ -102,12 +138,14 @@ function SignupForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="********" />
+                    <Input {...field} type="password" placeholder="********" />
                   </FormControl>
                 </FormItem>
               )}
             />
-            <Button className="w-full">Login</Button>
+            <Button isLoading={isPending} className="w-full">
+              Sign up
+            </Button>
           </form>
         </Form>
 
