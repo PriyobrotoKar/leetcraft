@@ -11,13 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin/route'
 import { Route as authRouteImport } from './routes/(auth)/route'
 import { Route as appRouteImport } from './routes/(app)/route'
 import { Route as appIndexImport } from './routes/(app)/index'
+import { Route as AdminUsersImport } from './routes/admin/users'
+import { Route as AdminSubmissionsImport } from './routes/admin/submissions'
+import { Route as AdminProblemsImport } from './routes/admin/problems'
+import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 import { Route as authSignupImport } from './routes/(auth)/signup'
 import { Route as authLoginImport } from './routes/(auth)/login'
 
 // Create/Update Routes
+
+const AdminRouteRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const authRouteRoute = authRouteImport.update({
   id: '/(auth)',
@@ -33,6 +44,30 @@ const appIndexRoute = appIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appRouteRoute,
+} as any)
+
+const AdminUsersRoute = AdminUsersImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+
+const AdminSubmissionsRoute = AdminSubmissionsImport.update({
+  id: '/submissions',
+  path: '/submissions',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+
+const AdminProblemsRoute = AdminProblemsImport.update({
+  id: '/problems',
+  path: '/problems',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+
+const AdminDashboardRoute = AdminDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 
 const authSignupRoute = authSignupImport.update({
@@ -65,6 +100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authRouteImport
       parentRoute: typeof rootRoute
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/(auth)/login': {
       id: '/(auth)/login'
       path: '/login'
@@ -78,6 +120,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/signup'
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof authRouteImport
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardImport
+      parentRoute: typeof AdminRouteImport
+    }
+    '/admin/problems': {
+      id: '/admin/problems'
+      path: '/problems'
+      fullPath: '/admin/problems'
+      preLoaderRoute: typeof AdminProblemsImport
+      parentRoute: typeof AdminRouteImport
+    }
+    '/admin/submissions': {
+      id: '/admin/submissions'
+      path: '/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AdminSubmissionsImport
+      parentRoute: typeof AdminRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersImport
+      parentRoute: typeof AdminRouteImport
     }
     '/(app)/': {
       id: '/(app)/'
@@ -117,38 +187,92 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface AdminRouteRouteChildren {
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminProblemsRoute: typeof AdminProblemsRoute
+  AdminSubmissionsRoute: typeof AdminSubmissionsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminProblemsRoute: AdminProblemsRoute,
+  AdminSubmissionsRoute: AdminSubmissionsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof appIndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/problems': typeof AdminProblemsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
+  '/admin/users': typeof AdminUsersRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof appIndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/problems': typeof AdminProblemsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
+  '/admin/users': typeof AdminUsersRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/problems': typeof AdminProblemsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/(app)/': typeof appIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/signup'
+    | '/admin/dashboard'
+    | '/admin/problems'
+    | '/admin/submissions'
+    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup'
+  to:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/signup'
+    | '/admin/dashboard'
+    | '/admin/problems'
+    | '/admin/submissions'
+    | '/admin/users'
   id:
     | '__root__'
     | '/(app)'
     | '/(auth)'
+    | '/admin'
     | '/(auth)/login'
     | '/(auth)/signup'
+    | '/admin/dashboard'
+    | '/admin/problems'
+    | '/admin/submissions'
+    | '/admin/users'
     | '/(app)/'
   fileRoutesById: FileRoutesById
 }
@@ -156,11 +280,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -174,7 +300,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/(app)",
-        "/(auth)"
+        "/(auth)",
+        "/admin"
       ]
     },
     "/(app)": {
@@ -190,6 +317,15 @@ export const routeTree = rootRoute
         "/(auth)/signup"
       ]
     },
+    "/admin": {
+      "filePath": "admin/route.tsx",
+      "children": [
+        "/admin/dashboard",
+        "/admin/problems",
+        "/admin/submissions",
+        "/admin/users"
+      ]
+    },
     "/(auth)/login": {
       "filePath": "(auth)/login.tsx",
       "parent": "/(auth)"
@@ -197,6 +333,22 @@ export const routeTree = rootRoute
     "/(auth)/signup": {
       "filePath": "(auth)/signup.tsx",
       "parent": "/(auth)"
+    },
+    "/admin/dashboard": {
+      "filePath": "admin/dashboard.tsx",
+      "parent": "/admin"
+    },
+    "/admin/problems": {
+      "filePath": "admin/problems.tsx",
+      "parent": "/admin"
+    },
+    "/admin/submissions": {
+      "filePath": "admin/submissions.tsx",
+      "parent": "/admin"
+    },
+    "/admin/users": {
+      "filePath": "admin/users.tsx",
+      "parent": "/admin"
     },
     "/(app)/": {
       "filePath": "(app)/index.tsx",
