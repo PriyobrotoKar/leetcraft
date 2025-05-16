@@ -17,10 +17,11 @@ import { Route as appRouteImport } from './routes/(app)/route'
 import { Route as appIndexImport } from './routes/(app)/index'
 import { Route as AdminUsersImport } from './routes/admin/users'
 import { Route as AdminSubmissionsImport } from './routes/admin/submissions'
-import { Route as AdminProblemsImport } from './routes/admin/problems'
 import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 import { Route as authSignupImport } from './routes/(auth)/signup'
 import { Route as authLoginImport } from './routes/(auth)/login'
+import { Route as AdminProblemsIndexImport } from './routes/admin/problems/index'
+import { Route as AdminProblemsCreateIndexImport } from './routes/admin/problems/create/index'
 
 // Create/Update Routes
 
@@ -58,12 +59,6 @@ const AdminSubmissionsRoute = AdminSubmissionsImport.update({
   getParentRoute: () => AdminRouteRoute,
 } as any)
 
-const AdminProblemsRoute = AdminProblemsImport.update({
-  id: '/problems',
-  path: '/problems',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-
 const AdminDashboardRoute = AdminDashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -80,6 +75,18 @@ const authLoginRoute = authLoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => authRouteRoute,
+} as any)
+
+const AdminProblemsIndexRoute = AdminProblemsIndexImport.update({
+  id: '/problems/',
+  path: '/problems/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+
+const AdminProblemsCreateIndexRoute = AdminProblemsCreateIndexImport.update({
+  id: '/problems/create/',
+  path: '/problems/create/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -128,13 +135,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardImport
       parentRoute: typeof AdminRouteImport
     }
-    '/admin/problems': {
-      id: '/admin/problems'
-      path: '/problems'
-      fullPath: '/admin/problems'
-      preLoaderRoute: typeof AdminProblemsImport
-      parentRoute: typeof AdminRouteImport
-    }
     '/admin/submissions': {
       id: '/admin/submissions'
       path: '/submissions'
@@ -155,6 +155,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof appIndexImport
       parentRoute: typeof appRouteImport
+    }
+    '/admin/problems/': {
+      id: '/admin/problems/'
+      path: '/problems'
+      fullPath: '/admin/problems'
+      preLoaderRoute: typeof AdminProblemsIndexImport
+      parentRoute: typeof AdminRouteImport
+    }
+    '/admin/problems/create/': {
+      id: '/admin/problems/create/'
+      path: '/problems/create'
+      fullPath: '/admin/problems/create'
+      preLoaderRoute: typeof AdminProblemsCreateIndexImport
+      parentRoute: typeof AdminRouteImport
     }
   }
 }
@@ -189,16 +203,18 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface AdminRouteRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminProblemsRoute: typeof AdminProblemsRoute
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
+  AdminProblemsIndexRoute: typeof AdminProblemsIndexRoute
+  AdminProblemsCreateIndexRoute: typeof AdminProblemsCreateIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
-  AdminProblemsRoute: AdminProblemsRoute,
   AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminUsersRoute: AdminUsersRoute,
+  AdminProblemsIndexRoute: AdminProblemsIndexRoute,
+  AdminProblemsCreateIndexRoute: AdminProblemsCreateIndexRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
@@ -211,9 +227,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/problems': typeof AdminProblemsRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/problems': typeof AdminProblemsIndexRoute
+  '/admin/problems/create': typeof AdminProblemsCreateIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -222,9 +239,10 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/problems': typeof AdminProblemsRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/problems': typeof AdminProblemsIndexRoute
+  '/admin/problems/create': typeof AdminProblemsCreateIndexRoute
 }
 
 export interface FileRoutesById {
@@ -235,10 +253,11 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/problems': typeof AdminProblemsRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/(app)/': typeof appIndexRoute
+  '/admin/problems/': typeof AdminProblemsIndexRoute
+  '/admin/problems/create/': typeof AdminProblemsCreateIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -249,9 +268,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/admin/dashboard'
-    | '/admin/problems'
     | '/admin/submissions'
     | '/admin/users'
+    | '/admin/problems'
+    | '/admin/problems/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -259,9 +279,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/admin/dashboard'
-    | '/admin/problems'
     | '/admin/submissions'
     | '/admin/users'
+    | '/admin/problems'
+    | '/admin/problems/create'
   id:
     | '__root__'
     | '/(app)'
@@ -270,10 +291,11 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/signup'
     | '/admin/dashboard'
-    | '/admin/problems'
     | '/admin/submissions'
     | '/admin/users'
     | '/(app)/'
+    | '/admin/problems/'
+    | '/admin/problems/create/'
   fileRoutesById: FileRoutesById
 }
 
@@ -321,9 +343,10 @@ export const routeTree = rootRoute
       "filePath": "admin/route.tsx",
       "children": [
         "/admin/dashboard",
-        "/admin/problems",
         "/admin/submissions",
-        "/admin/users"
+        "/admin/users",
+        "/admin/problems/",
+        "/admin/problems/create/"
       ]
     },
     "/(auth)/login": {
@@ -338,10 +361,6 @@ export const routeTree = rootRoute
       "filePath": "admin/dashboard.tsx",
       "parent": "/admin"
     },
-    "/admin/problems": {
-      "filePath": "admin/problems.tsx",
-      "parent": "/admin"
-    },
     "/admin/submissions": {
       "filePath": "admin/submissions.tsx",
       "parent": "/admin"
@@ -353,6 +372,14 @@ export const routeTree = rootRoute
     "/(app)/": {
       "filePath": "(app)/index.tsx",
       "parent": "/(app)"
+    },
+    "/admin/problems/": {
+      "filePath": "admin/problems/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/problems/create/": {
+      "filePath": "admin/problems/create/index.tsx",
+      "parent": "/admin"
     }
   }
 }

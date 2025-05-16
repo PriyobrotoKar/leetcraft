@@ -1,3 +1,5 @@
+import { sleep } from '@/lib/utils';
+
 class ApiClient {
   private baseUrl: string = import.meta.env.VITE_BACKEND_URL + '/api/v1';
 
@@ -7,6 +9,7 @@ class ApiClient {
 
   private async fetch<T>(url: string, options?: RequestInit): Promise<T> {
     try {
+      await sleep(1000); // Simulate network delay
       const response = await fetch(this.baseUrl + url, {
         credentials: 'include',
         headers: {
