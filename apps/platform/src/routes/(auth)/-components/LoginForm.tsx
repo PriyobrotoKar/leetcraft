@@ -32,7 +32,7 @@ const LoginSchema = z.object({
 
 function LoginForm() {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { login } = useAuth();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -42,12 +42,8 @@ function LoginForm() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: z.infer<typeof LoginSchema>) =>
-      AuthService.login(data),
-    onSuccess: (data) => {
-      setAuth({
-        user: data.user,
-      });
+    mutationFn: async (data: z.infer<typeof LoginSchema>) => login(data),
+    onSuccess: () => {
       navigate({
         to: '/',
       });

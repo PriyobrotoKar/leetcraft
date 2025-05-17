@@ -8,6 +8,8 @@ export const Route = createFileRoute('/(app)')({
 function DashboardLayout() {
   const { auth } = useAuth();
 
+  console.log('DashboardLayout', auth);
+
   if (!auth.user) {
     return <Navigate to="/login" />;
   }

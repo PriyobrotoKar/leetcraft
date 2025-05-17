@@ -15,6 +15,7 @@ interface IAuthContext {
     user: CurrentUser | null;
   };
   setAuth: ({ user }: { user: CurrentUser | null }) => void;
+  login: (data: { email: string; password: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext | null>(null);
@@ -42,11 +43,27 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
     fetchUser();
   }, []);
 
+  const login = async (data: { email: string; password: string }) => {
+    try {
+      const {
+        user: { name, email, role },
+      } = await AuthService.login(data);
+      setAuth({
+        user: { name, email, role },
+      });
+      localStorage.setItem('user', JSON.stringify({ name, email, role }));
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         auth,
         setAuth,
+        login,
       }}
     >
       {children}

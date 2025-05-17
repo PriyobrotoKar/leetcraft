@@ -9,6 +9,8 @@ export const Route = createFileRoute('/admin')({
 function AdminLayout() {
   const { auth } = useAuth();
 
+  console.log('AdminLayout', auth);
+
   if (!auth.user) {
     return <Navigate to="/login" />;
   }
