@@ -148,3 +148,7 @@
     @apply size-5;
   }
 }
+
+.wmde-markdown {
+  background-color: transparent;
+}
