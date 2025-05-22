@@ -6,7 +6,7 @@ import TableActions from './TableActions';
 function ProblemTable() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['problems'],
-    queryFn: () => ProblemService.getProblems(),
+    queryFn: () => ProblemService.getProblemsCreated(),
   });
 
   if (isLoading) {

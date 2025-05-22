@@ -9,15 +9,12 @@ export const Route = createFileRoute('/admin/problems/create/')({
 
 function RouteComponent() {
   return (
-    <div className="space-y-10">
+    <div className="flex min-h-full flex-col gap-10">
       <Header
         title="Create Problem"
         subtitle="Define a new coding problem with description, constraints, test cases and tags"
       />
-      <div className="space-y-4">
-        <Actions />
-        <BasicInfoForm />
-      </div>
+      <BasicInfoForm />
     </div>
   );
 }

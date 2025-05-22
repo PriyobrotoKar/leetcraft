@@ -3,15 +3,22 @@ import { cn } from '@leetcraft/ui/lib/utils';
 import { IconChevronRight } from '@tabler/icons-react';
 import { Fragment } from 'react';
 
-function Actions() {
+interface ActionsProps {
+  isPending?: boolean;
+  onSubmit: () => void;
+}
+
+function Actions({ onSubmit, isPending = false }: ActionsProps) {
   return (
     <div className="flex items-center justify-between">
       <Steps />
-      <div className="space-x-4">
+      <div className="flex items-center gap-4">
         <Button size={'sm'} variant={'tertiary'}>
           Load Sample
         </Button>
-        <Button size={'sm'}>Continue</Button>
+        <Button isLoading={isPending} size={'sm'} onClick={onSubmit}>
+          Continue
+        </Button>
       </div>
     </div>
   );

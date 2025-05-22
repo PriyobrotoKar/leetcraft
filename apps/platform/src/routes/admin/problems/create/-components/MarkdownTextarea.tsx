@@ -16,7 +16,7 @@ function MarkdownTextarea({ preview, ...props }: TextareaProps) {
 
   if (preview) {
     return (
-      <div className="h-40 overflow-auto px-3 py-2">
+      <div className="h-40 flex-1 overflow-auto px-3 py-2">
         <MarkdownPreview
           remarkPlugins={[remarkBreak]}
           style={{
@@ -32,9 +32,9 @@ function MarkdownTextarea({ preview, ...props }: TextareaProps) {
   }
 
   return (
-    <div>
+    <div className="flex flex-1">
       <Textarea
-        className="h-40 resize-none rounded-none border-none focus-visible:ring-0 dark:bg-transparent"
+        className="flex-1 resize-none rounded-none border-none focus-visible:ring-0 dark:bg-transparent"
         {...props}
         placeholder='Markdown supported. Use triple backticks for code blocks. Example: ```python\nprint("Hello World")\n```'
       />

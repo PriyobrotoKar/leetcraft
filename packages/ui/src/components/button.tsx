@@ -17,7 +17,7 @@ const buttonVariants = cva(
         outline:
           'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground shadow-xs inset-shadow-[#fff] ring-[#151415] border-[#969696] hover:bg-secondary/80',
         tertiary:
           'bg-tertiary text-tertiary-foreground shadow-xs inset-shadow-[#292929] ring-[#151415] border-[#0B090D] hover:bg-tertiary/90',
         ghost: 'hover:text-accent-foreground ring-transparent',
@@ -62,7 +62,7 @@ function Button({
       <>
         {isLoading ? (
           <>
-            <IconLoader size={18} className="mr-2 animate-spin" />
+            <IconLoader className="animate-spin" />
             Processing
           </>
         ) : (

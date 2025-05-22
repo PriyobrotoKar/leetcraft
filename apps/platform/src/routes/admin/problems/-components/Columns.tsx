@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Problem } from '@leetcraft/db';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -38,9 +39,13 @@ export const columns: ColumnDef<
     header: 'Validated',
     cell: ({ getValue }) => {
       const isValidated = getValue() as boolean;
-
       return (
-        <div className="w-fit rounded-md bg-green-500/30 px-3 py-1.5 text-green-500">
+        <div
+          className={cn(
+            'w-fit rounded-md bg-red-500/30 px-3 py-1.5 text-red-500',
+            isValidated && 'bg-green-500/30 text-green-500',
+          )}
+        >
           {isValidated ? 'Verified' : 'Unverified'}
         </div>
       );

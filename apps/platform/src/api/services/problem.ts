@@ -4,8 +4,17 @@ import ApiClient from '../client';
 class ProblemService {
   private static apiClient: ApiClient = new ApiClient('/problems');
 
-  static async getProblems() {
-    return this.apiClient.get<Problem[]>('/');
+  static async getProblemsCreated() {
+    return this.apiClient.get<Problem[]>('/created');
+  }
+
+  static async createProblem(
+    problem: Omit<
+      Problem,
+      'id' | 'authorId' | 'createdAt' | 'updatedAt' | 'isValidated'
+    >,
+  ) {
+    return this.apiClient.post<Problem>('/', problem);
   }
 }
 export default ProblemService;
