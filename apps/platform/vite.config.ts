@@ -17,4 +17,12 @@ export default defineConfig({
       '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
     },
   },
+  optimizeDeps: {
+    include: ['@leetcraft/boilerplate-generator'],
+  },
+  build: {
+    commonjsOptions: {
+      include: ['@leetcraft/boilerplate-generator', /node_modules/],
+    },
+  },
 });

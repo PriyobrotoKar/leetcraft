@@ -189,7 +189,11 @@ function BasicInfoForm() {
             <FormField
               name="structure"
               render={({ field }) => (
-                <CodeEditor onChange={(value) => field.onChange(value)} />
+                <CodeEditor
+                  title="Structure"
+                  language="yaml"
+                  onChange={(value) => field.onChange(value)}
+                />
               )}
             />
             <FormField

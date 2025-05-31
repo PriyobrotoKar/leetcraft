@@ -14,12 +14,17 @@ import {
   TableRow,
 } from '@leetcraft/ui/components/table';
 import { cn } from '@leetcraft/ui/lib/utils';
+import { useNavigate } from '@tanstack/react-router';
 
 interface DataTableProps {
   data: Problem[];
 }
 
 function DataTable({ data }: DataTableProps) {
+  const navigate = useNavigate({
+    from: '/admin/problems',
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -62,6 +67,11 @@ function DataTable({ data }: DataTableProps) {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
+                onClick={() =>
+                  navigate({
+                    to: `/admin/problems/${row.original.id}/validate`,
+                  })
+                }
               >
                 {row.getVisibleCells().map((cell, i, cells) => (
                   <TableCell

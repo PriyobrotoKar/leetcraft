@@ -6,17 +6,18 @@ import { useFormContext } from 'react-hook-form';
 
 interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  defaultValue?: string;
   preview?: boolean;
 }
 
-function MarkdownTextarea({ preview, ...props }: TextareaProps) {
+function MarkdownTextarea({ preview, defaultValue, ...props }: TextareaProps) {
   const value = useFormContext();
 
-  const markdown = value.getValues('description');
+  const markdown = defaultValue ?? value.getValues('description');
 
   if (preview) {
     return (
-      <div className="h-40 flex-1 overflow-auto px-3 py-2">
+      <div className="flex-1 overflow-auto px-3 py-2">
         <MarkdownPreview
           remarkPlugins={[remarkBreak]}
           style={{

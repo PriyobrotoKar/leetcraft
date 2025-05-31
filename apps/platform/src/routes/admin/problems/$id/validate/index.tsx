@@ -1,8 +1,8 @@
 import Header from '@/components/Header';
 import { createFileRoute } from '@tanstack/react-router';
-import BasicInfoForm from './-components/BasicInfoForm';
+import ValidateForm from './-components/ValidateForm';
 
-export const Route = createFileRoute('/admin/problems/create/')({
+export const Route = createFileRoute('/admin/problems/$id/validate/')({
   component: RouteComponent,
 });
 
@@ -13,7 +13,7 @@ function RouteComponent() {
         title="Create Problem"
         subtitle="Define a new coding problem with description, constraints, test cases and tags"
       />
-      <BasicInfoForm />
+      <ValidateForm id={Route.useParams().id} />
     </div>
   );
 }

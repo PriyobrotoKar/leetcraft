@@ -3,7 +3,7 @@ import { Problem } from '@leetcraft/db';
 import { ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<
-  Pick<Problem, 'title' | 'difficulty' | 'createdAt' | 'isValidated'>
+  Pick<Problem, 'id' | 'title' | 'difficulty' | 'createdAt' | 'isValidated'>
 >[] = [
   {
     accessorKey: 'title',

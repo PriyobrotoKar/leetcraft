@@ -1,6 +1,7 @@
 import { Button } from '@leetcraft/ui/components/button';
 import { cn } from '@leetcraft/ui/lib/utils';
 import { IconChevronRight } from '@tabler/icons-react';
+import { useLocation } from '@tanstack/react-router';
 import { Fragment } from 'react';
 
 interface ActionsProps {
@@ -26,14 +27,28 @@ function Actions({ onSubmit, isPending = false }: ActionsProps) {
 
 export default Actions;
 
-const steps = ['Basic Info', 'Validate Problem', 'Finish'];
+const steps = [
+  {
+    label: 'Basic Info',
+  },
+  {
+    label: 'Validate Problem',
+    path: '/validate',
+  },
+  {
+    label: 'Finish',
+    path: '/complete',
+  },
+];
 
 function Steps() {
+  const pathname = useLocation().pathname;
+
   return (
     <div>
       <div className="flex items-center gap-2">
         {steps.map((step, index) => {
-          const isActive = index === 0;
+          const isActive = step.path && pathname.endsWith(step.path);
 
           return (
             <Fragment key={index}>
@@ -52,7 +67,7 @@ function Steps() {
                     isActive && 'text-foreground',
                   )}
                 >
-                  {step}
+                  {step.label}
                 </div>
               </div>
               {index < steps.length - 1 && (
