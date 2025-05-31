@@ -1,6 +1,11 @@
 import Generator from './generator';
 import ProblemParser from './parser';
 
+export const parseProblemStructure = (structure: string) => {
+  const parsedStruct = ProblemParser.parse(structure);
+  return parsedStruct;
+};
+
 export const generateBoilerplates = (structure: string) => {
   const parsedStruct = ProblemParser.parse(structure);
 

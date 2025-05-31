@@ -96,6 +96,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.3(react@19.1.0))
+      '@leetcraft/boilerplate-generator':
+        specifier: workspace:*
+        version: link:../../packages/boilerplate-generator
       '@leetcraft/ui':
         specifier: workspace:*
         version: link:../../packages/ui
