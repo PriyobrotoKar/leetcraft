@@ -39,6 +39,12 @@ problemRouter.get(
   problemController.getProblemsCreatedByUser,
 );
 
+problemRouter.get(
+  '/:id',
+  validateSchema({ param: z.object({ id: z.string() }) }),
+  problemController.getProblemById,
+);
+
 problemRouter.patch(
   '/:id',
   verifyAdmin,

@@ -163,10 +163,11 @@ class ProblemService {
   }
 
   async getProblemById(problemId: string) {
+    //TODO: If the user is Admin, then we should return the problem including the ones that are not validated, otherwise only validated Problems
+
     const problem = await db.problem.findUnique({
       where: {
         id: problemId,
-        isValidated: true,
       },
       include: {
         boilerplates: true,

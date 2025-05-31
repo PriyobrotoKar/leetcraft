@@ -43,6 +43,11 @@ class ProblemController {
     res.status(200).json(problems);
   };
 
+  getProblemById: HandleRequest<{ id: string }> = async (req, res) => {
+    const problem = await this.problemService.getProblemById(req.params.id);
+    res.status(200).json(problem);
+  };
+
   getProblemsCreatedByUser: HandleRequest = async (req, res) => {
     const problems = await this.problemService.getProblemsCreatedByUser(
       req.user,
