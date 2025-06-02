@@ -36,7 +36,7 @@ class JudgeService {
   async validateBatch(tokens: string[]): Promise<SubmissionResponseDto[]> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/submissions/batch?base64_encoded=false&tokens=${tokens.join(',')}`,
+        `${this.baseUrl}/submissions/batch?base64_encoded=false&fields=stdin,stdout,stderr,compile_output,message,status,expected_output&tokens=${tokens.join(',')}`,
         {
           headers: {
             'Content-Type': 'application/json',

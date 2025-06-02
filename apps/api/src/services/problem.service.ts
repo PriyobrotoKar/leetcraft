@@ -112,6 +112,19 @@ class ProblemService {
     console.log('Callback body:', body);
     const isAccepted = Number(body.status.id === 3);
 
+    const problem = await db.problem.findUnique({
+      where: {
+        id: problemId,
+      },
+      select: {
+        testcases: true,
+      },
+    });
+
+    if (!problem) {
+      throw new NotFoundError('Problem not found');
+    }
+
     await redisConnection.hsetnx(
       `validate:problem:${problemId}`,
       body.token,
@@ -121,6 +134,20 @@ class ProblemService {
     const allTokens = await redisConnection.hgetall(
       `validate:problem:${problemId}`,
     );
+
+    const hasAllReceived =
+      Object.keys(allTokens).length === problem.testcases.length;
+
+    console.log(Object.keys(allTokens).length, problem.testcases.length);
+
+    if (!hasAllReceived) {
+      console.log('Not all submission received yet');
+
+      return {
+        message:
+          'Problem validate callback received but not all testcases received yet',
+      };
+    }
 
     const isAllAccepted = Object.values(allTokens).every((value) =>
       Number(value),

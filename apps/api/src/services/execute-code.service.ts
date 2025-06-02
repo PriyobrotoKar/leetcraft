@@ -71,11 +71,17 @@ class ExecuteService {
     // return the results of the validation
     return {
       pending: false,
-      results: results.map(({ token, status }) => ({
-        token,
-        message: status.description,
-        status: status.id,
-      })),
+      results: results.map(
+        ({ token, status, stdin, stdout, stderr, expected_output }) => ({
+          token,
+          input: stdin,
+          output: stdout,
+          error: stderr,
+          expectedOutput: expected_output,
+          message: status.description,
+          status: status.id,
+        }),
+      ),
     };
   }
 }
