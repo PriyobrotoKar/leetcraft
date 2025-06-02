@@ -19,12 +19,7 @@ function ProblemTable() {
     return <div>Error loading problems</div>;
   }
 
-  return (
-    <div className="space-y-4">
-      <TableActions data={data} />
-      <DataTable data={data} />
-    </div>
-  );
+  return <DataTable data={data} />;
 }
 
 export default ProblemTable;

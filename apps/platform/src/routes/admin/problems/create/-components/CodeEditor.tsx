@@ -1,5 +1,5 @@
-import Editor, { OnChange, useMonaco } from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
+import Editor, { OnChange, OnMount } from '@monaco-editor/react';
+import { useState } from 'react';
 import NightOwl from 'monaco-themes/themes/Night Owl.json';
 import {
   SupportedLanguage,
@@ -15,7 +15,7 @@ import {
 } from '@leetcraft/ui/components/select';
 
 interface CodeEditorProps {
-  onChange: OnChange;
+  onChange: (value: string | undefined, language: SupportedLanguage) => void;
   language?: SupportedLanguage | 'yaml';
   boilerplates?: Boilerplate[];
   title: string;
@@ -27,18 +27,14 @@ function CodeEditor({
   boilerplates,
   title,
 }: CodeEditorProps) {
-  const monaco = useMonaco();
   const [currentLanguage, setCurrentLanguage] = useState<SupportedLanguage>(
     supportedLanguages[0].language,
   );
 
-  const defaultValue =
-    boilerplates?.find((b) => b.language === (language ?? currentLanguage))
-      ?.shortCode || '';
+  const getBoilerplateForLang = (language: SupportedLanguage) =>
+    boilerplates?.find((b) => b.language === language)?.shortCode || '';
 
-  useEffect(() => {
-    if (!monaco) return;
-
+  const handleEditorDidMount: OnMount = (_, monaco) => {
     monaco.editor.defineTheme('night-owl', {
       ...NightOwl,
       base: 'vs-dark',
@@ -50,7 +46,7 @@ function CodeEditor({
     });
 
     monaco.editor.setTheme('night-owl');
-  }, [monaco]);
+  };
 
   return (
     <div className="bg-card focus-within:ring-ring/50 flex flex-1 flex-col gap-0 rounded-md border focus-within:ring-1">
@@ -62,9 +58,10 @@ function CodeEditor({
           ) : (
             <Select
               value={currentLanguage}
-              onValueChange={(value: SupportedLanguage) =>
-                setCurrentLanguage(value)
-              }
+              onValueChange={(value: SupportedLanguage) => {
+                setCurrentLanguage(value);
+                onChange(getBoilerplateForLang(value), value);
+              }}
             >
               <SelectTrigger size="sm" className="border-none">
                 <SelectValue placeholder="Select a fruit" />
@@ -84,9 +81,10 @@ function CodeEditor({
       </div>
       <div className="flex-1">
         <Editor
-          onChange={onChange}
-          value={defaultValue}
+          onChange={(value) => onChange(value, currentLanguage)}
+          value={getBoilerplateForLang(currentLanguage)}
           language={language ?? currentLanguage}
+          onMount={handleEditorDidMount}
           options={{
             fontSize: 14,
             minimap: {

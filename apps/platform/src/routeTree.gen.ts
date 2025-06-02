@@ -24,6 +24,7 @@ import { Route as AdminProblemsIndexImport } from './routes/admin/problems/index
 import { Route as AdminProblemsCreateIndexImport } from './routes/admin/problems/create/index'
 import { Route as AdminProblemsIdIndexImport } from './routes/admin/problems/$id/index'
 import { Route as AdminProblemsIdValidateIndexImport } from './routes/admin/problems/$id/validate/index'
+import { Route as AdminProblemsIdCompleteIndexImport } from './routes/admin/problems/$id/complete/index'
 
 // Create/Update Routes
 
@@ -101,6 +102,13 @@ const AdminProblemsIdValidateIndexRoute =
   AdminProblemsIdValidateIndexImport.update({
     id: '/problems/$id/validate/',
     path: '/problems/$id/validate/',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+
+const AdminProblemsIdCompleteIndexRoute =
+  AdminProblemsIdCompleteIndexImport.update({
+    id: '/problems/$id/complete/',
+    path: '/problems/$id/complete/',
     getParentRoute: () => AdminRouteRoute,
   } as any)
 
@@ -192,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProblemsCreateIndexImport
       parentRoute: typeof AdminRouteImport
     }
+    '/admin/problems/$id/complete/': {
+      id: '/admin/problems/$id/complete/'
+      path: '/problems/$id/complete'
+      fullPath: '/admin/problems/$id/complete'
+      preLoaderRoute: typeof AdminProblemsIdCompleteIndexImport
+      parentRoute: typeof AdminRouteImport
+    }
     '/admin/problems/$id/validate/': {
       id: '/admin/problems/$id/validate/'
       path: '/problems/$id/validate'
@@ -237,6 +252,7 @@ interface AdminRouteRouteChildren {
   AdminProblemsIndexRoute: typeof AdminProblemsIndexRoute
   AdminProblemsIdIndexRoute: typeof AdminProblemsIdIndexRoute
   AdminProblemsCreateIndexRoute: typeof AdminProblemsCreateIndexRoute
+  AdminProblemsIdCompleteIndexRoute: typeof AdminProblemsIdCompleteIndexRoute
   AdminProblemsIdValidateIndexRoute: typeof AdminProblemsIdValidateIndexRoute
 }
 
@@ -247,6 +263,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminProblemsIndexRoute: AdminProblemsIndexRoute,
   AdminProblemsIdIndexRoute: AdminProblemsIdIndexRoute,
   AdminProblemsCreateIndexRoute: AdminProblemsCreateIndexRoute,
+  AdminProblemsIdCompleteIndexRoute: AdminProblemsIdCompleteIndexRoute,
   AdminProblemsIdValidateIndexRoute: AdminProblemsIdValidateIndexRoute,
 }
 
@@ -265,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/admin/problems': typeof AdminProblemsIndexRoute
   '/admin/problems/$id': typeof AdminProblemsIdIndexRoute
   '/admin/problems/create': typeof AdminProblemsCreateIndexRoute
+  '/admin/problems/$id/complete': typeof AdminProblemsIdCompleteIndexRoute
   '/admin/problems/$id/validate': typeof AdminProblemsIdValidateIndexRoute
 }
 
@@ -279,6 +297,7 @@ export interface FileRoutesByTo {
   '/admin/problems': typeof AdminProblemsIndexRoute
   '/admin/problems/$id': typeof AdminProblemsIdIndexRoute
   '/admin/problems/create': typeof AdminProblemsCreateIndexRoute
+  '/admin/problems/$id/complete': typeof AdminProblemsIdCompleteIndexRoute
   '/admin/problems/$id/validate': typeof AdminProblemsIdValidateIndexRoute
 }
 
@@ -296,6 +315,7 @@ export interface FileRoutesById {
   '/admin/problems/': typeof AdminProblemsIndexRoute
   '/admin/problems/$id/': typeof AdminProblemsIdIndexRoute
   '/admin/problems/create/': typeof AdminProblemsCreateIndexRoute
+  '/admin/problems/$id/complete/': typeof AdminProblemsIdCompleteIndexRoute
   '/admin/problems/$id/validate/': typeof AdminProblemsIdValidateIndexRoute
 }
 
@@ -312,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin/problems'
     | '/admin/problems/$id'
     | '/admin/problems/create'
+    | '/admin/problems/$id/complete'
     | '/admin/problems/$id/validate'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -325,6 +346,7 @@ export interface FileRouteTypes {
     | '/admin/problems'
     | '/admin/problems/$id'
     | '/admin/problems/create'
+    | '/admin/problems/$id/complete'
     | '/admin/problems/$id/validate'
   id:
     | '__root__'
@@ -340,6 +362,7 @@ export interface FileRouteTypes {
     | '/admin/problems/'
     | '/admin/problems/$id/'
     | '/admin/problems/create/'
+    | '/admin/problems/$id/complete/'
     | '/admin/problems/$id/validate/'
   fileRoutesById: FileRoutesById
 }
@@ -393,6 +416,7 @@ export const routeTree = rootRoute
         "/admin/problems/",
         "/admin/problems/$id/",
         "/admin/problems/create/",
+        "/admin/problems/$id/complete/",
         "/admin/problems/$id/validate/"
       ]
     },
@@ -430,6 +454,10 @@ export const routeTree = rootRoute
     },
     "/admin/problems/create/": {
       "filePath": "admin/problems/create/index.tsx",
+      "parent": "/admin"
+    },
+    "/admin/problems/$id/complete/": {
+      "filePath": "admin/problems/$id/complete/index.tsx",
       "parent": "/admin"
     },
     "/admin/problems/$id/validate/": {

@@ -34,7 +34,7 @@ function TestCases({ value = [], onChange }: TestCaseProps) {
     <div className="bg-card focus-within:ring-ring/50 flex h-72 grow-0 flex-col gap-0 overflow-hidden rounded-md border focus-within:ring-1">
       <div className="bg-tertiary text-md border-b p-3">Test Cases</div>
       <div className="overflow-auto">
-        <div className="grid flex-1 auto-rows-fr grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-3 p-3">
+        <div className="grid flex-1 auto-rows-fr grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-3 p-3">
           <TestCaseDialog setTestCases={setTestCases} />
           {testCases.map((testCase, index) => {
             return (

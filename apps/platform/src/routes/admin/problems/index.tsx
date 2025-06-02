@@ -1,6 +1,7 @@
 import Header from '@/components/Header';
 import { createFileRoute } from '@tanstack/react-router';
 import ProblemTable from './-components/ProblemTable';
+import TableActions from './-components/TableActions';
 
 export const Route = createFileRoute('/admin/problems/')({
   component: RouteComponent,
@@ -13,7 +14,11 @@ function RouteComponent() {
         title="Problem Management"
         subtitle="Create, update, and organize coding problems across the platform"
       />
-      <ProblemTable />
+
+      <div className="space-y-4">
+        <TableActions />
+        <ProblemTable />
+      </div>
     </div>
   );
 }

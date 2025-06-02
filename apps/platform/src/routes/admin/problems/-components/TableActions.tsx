@@ -1,20 +1,34 @@
+import ProblemService from '@/api/services/problem';
 import { Problem } from '@leetcraft/db';
 import { Button, buttonVariants } from '@leetcraft/ui/components/button';
 import { Input } from '@leetcraft/ui/components/input';
 import { Separator } from '@leetcraft/ui/components/separator';
 import { cn } from '@leetcraft/ui/lib/utils';
 import { IconPlus, IconSearch } from '@tabler/icons-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 
-interface TableActionsProps {
-  data: Problem[];
-}
+function TableActions() {
+  const [items, setItems] = useState<Problem[]>([]);
+  const queryClient = useQueryClient();
 
-function TableActions({ data }: TableActionsProps) {
+  useEffect(() => {
+    const fetchItems = async () => {
+      const data = (await queryClient.fetchQuery({
+        queryKey: ['problems'],
+        queryFn: () => ProblemService.getProblemsCreated(),
+      })) as Problem[];
+      setItems(data);
+    };
+
+    fetchItems();
+  }, []);
+
   return (
     <div className="flex justify-between">
       <div className="flex h-8 items-center gap-4">
-        <div>{data.length} items</div>
+        <div>{items.length} items</div>
         <Separator orientation="vertical" />
         <div className="relative">
           <IconSearch className="text-muted-foreground absolute left-2 top-1/2 size-4 -translate-y-1/2" />

@@ -29,6 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import ProblemService from '@/api/services/problem';
 import { toast } from 'sonner';
+import { useNavigate } from '@tanstack/react-router';
 
 const CreateProblemFormSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
@@ -48,6 +49,7 @@ const CreateProblemFormSchema = z.object({
 
 function BasicInfoForm() {
   const [preview, setPreview] = useState(false);
+  const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(CreateProblemFormSchema),
     defaultValues: {
@@ -60,13 +62,6 @@ function BasicInfoForm() {
     },
   });
 
-  const errors = form.formState.errors;
-  console.log('Form Errors:', errors);
-
-  const watch = form.watch();
-
-  console.log('Form Watch:', watch);
-
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: z.infer<typeof CreateProblemFormSchema>) =>
       ProblemService.createProblem(data),
@@ -74,8 +69,10 @@ function BasicInfoForm() {
       console.error('Error creating problem:', error);
       toast.error(error.message);
     },
-    onSuccess: () => {
-      toast.success('Problem created successfully');
+    onSuccess: (data) => {
+      navigate({
+        to: `/admin/problems/${data.problem.id}/validate`,
+      });
     },
   });
 

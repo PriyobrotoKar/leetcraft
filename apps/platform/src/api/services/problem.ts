@@ -1,5 +1,6 @@
-import { Prisma, Problem } from '@leetcraft/db';
+import { Boilerplate, Prisma, Problem } from '@leetcraft/db';
 import ApiClient from '../client';
+import { SupportedLanguage } from '@leetcraft/boilerplate-generator';
 
 type ProblemWithBoilerplate = Prisma.ProblemGetPayload<{
   include: {
@@ -24,7 +25,20 @@ class ProblemService {
       'id' | 'authorId' | 'createdAt' | 'updatedAt' | 'isValidated'
     >,
   ) {
-    return this.apiClient.post<Problem>('/', problem);
+    return this.apiClient.post<{
+      problem: Problem;
+      boilerplates: Boilerplate[];
+    }>('/', problem);
+  }
+
+  static async validateProblem(
+    problemId: string,
+    data: { solution: string; language: SupportedLanguage },
+  ) {
+    return this.apiClient.post<{ tokens: string[] }>(
+      `/${problemId}/validate`,
+      data,
+    );
   }
 }
 export default ProblemService;
