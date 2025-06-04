@@ -156,3 +156,11 @@
 .wmde-markdown {
   background-color: transparent;
 }
+
+.hide-cursor .monaco-editor .cursor {
+  display: none !important;
+}
+
+.monaco-container {
+  background-color: #1e1e1e;
+}
