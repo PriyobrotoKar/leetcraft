@@ -18,6 +18,8 @@ submissionRouter.post(
 
 submissionRouter.put('/:id/callback', submissionController.submissionCallback);
 
+submissionRouter.get('/', submissionController.getAllSubmissionsOfProblem);
+
 submissionRouter.get(
   '/:id',
   validateSchema({

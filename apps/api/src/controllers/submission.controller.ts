@@ -24,6 +24,19 @@ class SubmissionController {
     res.status(201).json(result);
   };
 
+  getAllSubmissionsOfProblem: HandleRequest<
+    never,
+    never,
+    { problemId: string }
+  > = async (req, res) => {
+    const submissions = await this.submissionService.getAllSubmissionsOfProblem(
+      req.query.problemId,
+      req.user,
+    );
+
+    res.status(200).json(submissions);
+  };
+
   getSubmissionById: HandleRequest<never, { id: string }> = async (
     req,
     res,

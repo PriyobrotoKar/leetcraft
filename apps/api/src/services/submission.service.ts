@@ -146,7 +146,7 @@ class SubmissionService {
           stdin: passedSubmissionData.stdin,
           stdout,
           output,
-          exptectedOutput: passedSubmissionData.expected_output,
+          expectedOutput: passedSubmissionData.expected_output,
           testsPassed: submission.problem.testcases.length,
         },
       });
@@ -163,7 +163,7 @@ class SubmissionService {
           stdin: body.stdin,
           stdout: body.stdout,
           output: body.output,
-          exptectedOutput: body.expected_output,
+          expectedOutput: body.expected_output,
           testsPassed: submission.problem.testcases.length,
         },
       });
@@ -206,7 +206,7 @@ class SubmissionService {
         stdin: failedSubmissionData.stdin,
         stdout,
         output,
-        exptectedOutput: failedSubmissionData.expected_output,
+        expectedOutput: failedSubmissionData.expected_output,
         testsPassed,
       },
     });
@@ -216,6 +216,25 @@ class SubmissionService {
     };
   }
 
+  getAllSubmissionsOfProblem = async (
+    problemId: string,
+    currentUser: CurrentUser,
+  ) => {
+    const problem = await this.problemService.getProblemById(problemId);
+
+    const submissions = await db.submission.findMany({
+      where: {
+        problemId: problem.id,
+        userId: currentUser.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return submissions;
+  };
+
   getSubmissionById = async (
     submissionId: string,
     currentUser: CurrentUser,
@@ -224,6 +243,13 @@ class SubmissionService {
       where: {
         id: submissionId,
         userId: currentUser.id,
+      },
+      include: {
+        problem: {
+          select: {
+            testcases: true,
+          },
+        },
       },
     });
 
