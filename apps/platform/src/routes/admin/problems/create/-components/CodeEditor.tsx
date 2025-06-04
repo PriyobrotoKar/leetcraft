@@ -1,4 +1,4 @@
-import Editor, { OnChange, OnMount } from '@monaco-editor/react';
+import Editor, { OnMount } from '@monaco-editor/react';
 import { useState } from 'react';
 import NightOwl from 'monaco-themes/themes/Night Owl.json';
 import {
@@ -13,9 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@leetcraft/ui/components/select';
+import { cn } from '@/lib/utils';
 
 interface CodeEditorProps {
   onChange: (value: string | undefined, language: SupportedLanguage) => void;
+  value?: string;
+  readOnly?: boolean;
   language?: SupportedLanguage | 'yaml';
   boilerplates?: Boilerplate[];
   title: string;
@@ -23,18 +26,20 @@ interface CodeEditorProps {
 
 function CodeEditor({
   onChange,
+  value,
+  readOnly = false,
   language,
   boilerplates,
   title,
 }: CodeEditorProps) {
+  const [editorReady, setEditorReady] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<SupportedLanguage>(
     supportedLanguages[0].language,
   );
-
   const getBoilerplateForLang = (language: SupportedLanguage) =>
     boilerplates?.find((b) => b.language === language)?.shortCode || '';
 
-  const handleEditorDidMount: OnMount = (_, monaco) => {
+  const handleEditorDidMount: OnMount = (editor, monaco) => {
     monaco.editor.defineTheme('night-owl', {
       ...NightOwl,
       base: 'vs-dark',
@@ -46,6 +51,8 @@ function CodeEditor({
     });
 
     monaco.editor.setTheme('night-owl');
+
+    setEditorReady(true);
   };
 
   return (
@@ -80,18 +87,25 @@ function CodeEditor({
         </div>
       </div>
       <div className="flex-1">
-        <Editor
-          onChange={(value) => onChange(value, currentLanguage)}
-          value={getBoilerplateForLang(currentLanguage)}
-          language={language ?? currentLanguage}
-          onMount={handleEditorDidMount}
-          options={{
-            fontSize: 14,
-            minimap: {
-              enabled: false,
-            },
-          }}
-        />
+        <div className={cn('h-full opacity-0', editorReady && 'opacity-100')}>
+          <Editor
+            height="100%"
+            width="100%"
+            className={readOnly ? 'hide-cursor pointer-events-none' : ''}
+            onChange={(value) => onChange(value, currentLanguage)}
+            value={value ?? getBoilerplateForLang(currentLanguage)}
+            language={language ?? currentLanguage}
+            onMount={handleEditorDidMount}
+            options={{
+              automaticLayout: true,
+              readOnly,
+              fontSize: 14,
+              minimap: {
+                enabled: false,
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   );

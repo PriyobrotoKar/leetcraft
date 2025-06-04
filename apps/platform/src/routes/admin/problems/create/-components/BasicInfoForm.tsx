@@ -107,7 +107,7 @@ function BasicInfoForm() {
             <FormField
               name="description"
               render={({ field }) => (
-                <FormItem className="bg-card focus-within:ring-ring/50 flex flex-1 flex-col gap-0 overflow-hidden rounded-md border focus-within:ring-1">
+                <FormItem className="bg-card focus-within:ring-ring/50 flex flex-1 basis-0 flex-col gap-0 overflow-hidden rounded-md border focus-within:ring-1">
                   <div className="bg-tertiary flex h-fit items-center justify-between border-b px-3 py-1">
                     <FormLabel>Description</FormLabel>
                     <div className="bg-background rounded-md p-1">

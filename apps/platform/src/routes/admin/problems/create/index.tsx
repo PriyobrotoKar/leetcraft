@@ -8,7 +8,7 @@ export const Route = createFileRoute('/admin/problems/create/')({
 
 function RouteComponent() {
   return (
-    <div className="flex min-h-full flex-col gap-10">
+    <div className="flex h-full flex-col gap-10">
       <Header
         title="Create Problem"
         subtitle="Define a new coding problem with description, constraints, test cases and tags"

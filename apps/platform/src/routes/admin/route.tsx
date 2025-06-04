@@ -20,7 +20,7 @@ function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-svh gap-3 p-5">
+    <div className="flex h-svh gap-3 p-5">
       <Sidebar />
       <div className="bg-surface flex-1 rounded-lg border px-6 py-5">
         <Outlet />

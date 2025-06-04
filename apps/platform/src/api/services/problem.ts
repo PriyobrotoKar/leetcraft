@@ -11,6 +11,10 @@ type ProblemWithBoilerplate = Prisma.ProblemGetPayload<{
 class ProblemService {
   private static apiClient: ApiClient = new ApiClient('/problems');
 
+  static async getProblems() {
+    return this.apiClient.get<Problem[]>('/');
+  }
+
   static async getProblemsCreated() {
     return this.apiClient.get<Problem[]>('/created');
   }

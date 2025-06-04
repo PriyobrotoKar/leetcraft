@@ -1,3 +1,4 @@
+import { Difficulty } from '@leetcraft/db';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -7,6 +8,17 @@ export function cn(...inputs: ClassValue[]) {
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function getDifficultyColor(difficulty: Difficulty): string {
+  switch (difficulty) {
+    case 'EASY':
+      return 'bg-green-500/20 text-green-500';
+    case 'MEDIUM':
+      return 'bg-yellow-500/20 text-yellow-500';
+    case 'HARD':
+      return 'bg-destructive/20 text-destructive';
+  }
 }
 
 export const pollWithRetry = async <T>(
