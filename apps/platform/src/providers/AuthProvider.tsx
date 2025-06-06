@@ -8,7 +8,7 @@ import {
 import { User } from '@leetcraft/db';
 import AuthService from '@/api/services/auth';
 
-type CurrentUser = Pick<User, 'name' | 'email' | 'role'>;
+export type CurrentUser = Pick<User, 'name' | 'email' | 'role'>;
 
 interface IAuthContext {
   auth: {

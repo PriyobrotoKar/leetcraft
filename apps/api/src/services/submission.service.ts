@@ -1,6 +1,7 @@
 import { SubmissionDto } from '@/dto/submission.dto';
+import { format } from 'date-fns';
 import ProblemService from './problem.service';
-import { replaceBoilerpatePlaceholder } from '@/lib/utils';
+import { getLevel, replaceBoilerpatePlaceholder } from '@/lib/utils';
 import { NotFoundError } from '@/lib/ApiError';
 import { db } from '@leetcraft/db';
 import { CurrentUser } from '@/types/auth';
@@ -52,24 +53,18 @@ class SubmissionService {
       language_id: boilerplate.languageId,
       stdin: testcase.input,
       expected_output: testcase.output,
-      callback_url: `http://host.docker.internal:8000/api/v1/submissions/${submission.id}/callback`,
+      callback_url: `http://host.docker.internal:8000/api/v1/submissions/${submission.id}/callback?userId=${currentUser.id}`,
     }));
 
     // Submit the batch of submissions to the judge
-    const tokens = await this.judgeService.submitBatch(submissionBatch);
+    await this.judgeService.submitBatch(submissionBatch);
 
     return {
       submissionId: submission.id,
     };
   }
 
-  async submissionCallback(body: any, submissionId: string) {
-    const data = {
-      ...body,
-      stderr: atob(body.stderr),
-      message: atob(body.message),
-    };
-
+  async submissionCallback(body: any, submissionId: string, userId: string) {
     const submission = await db.submission.findUnique({
       where: {
         id: submissionId,
@@ -77,6 +72,7 @@ class SubmissionService {
       select: {
         problem: {
           select: {
+            id: true,
             testcases: true,
           },
         },
@@ -150,21 +146,17 @@ class SubmissionService {
           testsPassed: submission.problem.testcases.length,
         },
       });
-      await db.submission.update({
+
+      await db.problem.update({
         where: {
-          id: submissionId,
+          id: submission.problem.id,
         },
         data: {
-          status: body.status.id,
-          message: body.status.description,
-          time: Number(body.time) * 1000,
-          memory: body.memory,
-          stderr: body.stderr,
-          stdin: body.stdin,
-          stdout: body.stdout,
-          output: body.output,
-          expectedOutput: body.expected_output,
-          testsPassed: submission.problem.testcases.length,
+          solvedBy: {
+            connect: {
+              id: userId,
+            },
+          },
         },
       });
 
@@ -216,15 +208,19 @@ class SubmissionService {
     };
   }
 
-  getAllSubmissionsOfProblem = async (
-    problemId: string,
+  getAllSubmissions = async (
     currentUser: CurrentUser,
+    filters?: {
+      problemId?: string;
+    },
   ) => {
-    const problem = await this.problemService.getProblemById(problemId);
+    const problem = filters?.problemId
+      ? await this.problemService.getProblemById(filters.problemId)
+      : undefined;
 
     const submissions = await db.submission.findMany({
       where: {
-        problemId: problem.id,
+        problemId: problem?.id,
         userId: currentUser.id,
       },
       orderBy: {
@@ -268,6 +264,40 @@ class SubmissionService {
       submission,
       pending: false,
     };
+  };
+
+  getStreak = async (currentUser: CurrentUser) => {
+    const submissions = await db.submission.findMany({
+      where: {
+        userId: currentUser.id,
+        status: {
+          not: null,
+        },
+        createdAt: {
+          gte: new Date(new Date().getFullYear(), 0, 1), // Jan 1 of current year
+        },
+      },
+      select: {
+        createdAt: true,
+      },
+    });
+
+    const groups = submissions.reduce(
+      (acc, sub) => {
+        const date = format(sub.createdAt, 'yyyy-MM-dd');
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    const result = Object.entries(groups).map(([date, count]) => ({
+      date,
+      count,
+      level: getLevel(count),
+    }));
+
+    return result;
   };
 }
 

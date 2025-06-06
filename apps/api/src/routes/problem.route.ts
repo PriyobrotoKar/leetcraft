@@ -39,6 +39,8 @@ problemRouter.get(
   problemController.getProblemsCreatedByUser,
 );
 
+problemRouter.get('/solved', problemController.getAllProblemsSolvedByUser);
+
 problemRouter.get(
   '/:id',
   validateSchema({ param: z.object({ id: z.string() }) }),

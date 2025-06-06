@@ -19,6 +19,30 @@ class ProblemService {
     return this.apiClient.get<Problem[]>('/created');
   }
 
+  static async getProblemsSolvedByUser() {
+    return this.apiClient.get<{
+      problems: Problem[];
+      stats: {
+        problems: {
+          solved: number;
+          total: number;
+        };
+        easy: {
+          solved: number;
+          total: number;
+        };
+        medium: {
+          solved: number;
+          total: number;
+        };
+        hard: {
+          solved: number;
+          total: number;
+        };
+      };
+    }>('/solved');
+  }
+
   static async getProblemById(id: string) {
     return this.apiClient.get<ProblemWithBoilerplate>(`/${id}`);
   }

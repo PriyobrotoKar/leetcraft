@@ -42,6 +42,7 @@ model User {
   createdProblems Problem[]    @relation("CreatedProblems")
   solvedProblems  Problem[]    @relation("SolvedProblems")
   submissions     Submission[]
+  playlists       Playlist[]
 }
 
 model Problem {
@@ -66,6 +67,8 @@ model Problem {
 
   boilerplates Boilerplate[]
   submissions  Submission[]
+
+  playlists Playlist[] @relation("PlaylistProblems")
 }
 
 model Boilerplate {
@@ -105,4 +108,21 @@ model Submission {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Playlist {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String
+
+  problems Problem[] @relation("PlaylistProblems")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, creatorId])
+  @@index([creatorId])
 }

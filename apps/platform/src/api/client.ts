@@ -1,5 +1,3 @@
-import { sleep } from '@/lib/utils';
-
 class ApiClient {
   private baseUrl: string = import.meta.env.VITE_BACKEND_URL + '/api/v1';
 
@@ -7,10 +5,18 @@ class ApiClient {
     this.baseUrl = this.baseUrl + service;
   }
 
-  private async fetch<T>(url: string, options?: RequestInit): Promise<T> {
+  private async fetch<T>(
+    url: string,
+    params?: Record<string, string>,
+    options?: RequestInit,
+  ): Promise<T> {
     try {
-      await sleep(1000); // Simulate network delay
-      const response = await fetch(this.baseUrl + url, {
+      const queryString =
+        params && Object.keys(params).length
+          ? '?' + new URLSearchParams(params).toString()
+          : '';
+
+      const response = await fetch(this.baseUrl + url + queryString, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -30,26 +36,26 @@ class ApiClient {
     }
   }
 
-  async get<T>(url: string) {
-    return this.fetch<T>(url);
+  async get<T>(url: string, params?: Record<string, string>) {
+    return this.fetch<T>(url, params);
   }
 
-  async post<T>(url: string, body: object) {
-    return this.fetch<T>(url, {
+  async post<T>(url: string, body?: object, params?: Record<string, string>) {
+    return this.fetch<T>(url, params, {
       method: 'POST',
       body: JSON.stringify(body),
     });
   }
 
-  async put<T>(url: string, body: object) {
-    return this.fetch<T>(url, {
+  async put<T>(url: string, body?: object, params?: Record<string, string>) {
+    return this.fetch<T>(url, params, {
       method: 'PUT',
       body: JSON.stringify(body),
     });
   }
 
-  async delete<T>(url: string) {
-    return this.fetch<T>(url, {
+  async delete<T>(url: string, params?: Record<string, string>) {
+    return this.fetch<T>(url, params, {
       method: 'DELETE',
     });
   }

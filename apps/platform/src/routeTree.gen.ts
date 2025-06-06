@@ -21,13 +21,16 @@ import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 import { Route as authSignupImport } from './routes/(auth)/signup'
 import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as AdminProblemsIndexImport } from './routes/admin/problems/index'
+import { Route as appProfileIndexImport } from './routes/(app)/profile/index'
 import { Route as appProblemsProblemIdRouteImport } from './routes/(app)/problems/$problemId/route'
 import { Route as AdminProblemsCreateIndexImport } from './routes/admin/problems/create/index'
 import { Route as AdminProblemsIdIndexImport } from './routes/admin/problems/$id/index'
 import { Route as appProblemsProblemIdIndexImport } from './routes/(app)/problems/$problemId/index'
+import { Route as appListsIdIndexImport } from './routes/(app)/lists/$id/index'
 import { Route as appProblemsProblemIdSubmissionsRouteImport } from './routes/(app)/problems/$problemId/submissions/route'
 import { Route as AdminProblemsIdValidateIndexImport } from './routes/admin/problems/$id/validate/index'
 import { Route as AdminProblemsIdCompleteIndexImport } from './routes/admin/problems/$id/complete/index'
+import { Route as appProblemsProblemIdSubmissionsIndexImport } from './routes/(app)/problems/$problemId/submissions/index'
 import { Route as appProblemsProblemIdSubmissionsIdIndexImport } from './routes/(app)/problems/$problemId/submissions/$id/index'
 
 // Create/Update Routes
@@ -90,6 +93,12 @@ const AdminProblemsIndexRoute = AdminProblemsIndexImport.update({
   getParentRoute: () => AdminRouteRoute,
 } as any)
 
+const appProfileIndexRoute = appProfileIndexImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => appRouteRoute,
+} as any)
+
 const appProblemsProblemIdRouteRoute = appProblemsProblemIdRouteImport.update({
   id: '/problems/$problemId',
   path: '/problems/$problemId',
@@ -114,6 +123,12 @@ const appProblemsProblemIdIndexRoute = appProblemsProblemIdIndexImport.update({
   getParentRoute: () => appProblemsProblemIdRouteRoute,
 } as any)
 
+const appListsIdIndexRoute = appListsIdIndexImport.update({
+  id: '/lists/$id/',
+  path: '/lists/$id/',
+  getParentRoute: () => appRouteRoute,
+} as any)
+
 const appProblemsProblemIdSubmissionsRouteRoute =
   appProblemsProblemIdSubmissionsRouteImport.update({
     id: '/submissions',
@@ -133,6 +148,13 @@ const AdminProblemsIdCompleteIndexRoute =
     id: '/problems/$id/complete/',
     path: '/problems/$id/complete/',
     getParentRoute: () => AdminRouteRoute,
+  } as any)
+
+const appProblemsProblemIdSubmissionsIndexRoute =
+  appProblemsProblemIdSubmissionsIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => appProblemsProblemIdSubmissionsRouteRoute,
   } as any)
 
 const appProblemsProblemIdSubmissionsIdIndexRoute =
@@ -216,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appProblemsProblemIdRouteImport
       parentRoute: typeof appRouteImport
     }
+    '/(app)/profile/': {
+      id: '/(app)/profile/'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof appProfileIndexImport
+      parentRoute: typeof appRouteImport
+    }
     '/admin/problems/': {
       id: '/admin/problems/'
       path: '/problems'
@@ -229,6 +258,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/problems/$problemId/submissions'
       preLoaderRoute: typeof appProblemsProblemIdSubmissionsRouteImport
       parentRoute: typeof appProblemsProblemIdRouteImport
+    }
+    '/(app)/lists/$id/': {
+      id: '/(app)/lists/$id/'
+      path: '/lists/$id'
+      fullPath: '/lists/$id'
+      preLoaderRoute: typeof appListsIdIndexImport
+      parentRoute: typeof appRouteImport
     }
     '/(app)/problems/$problemId/': {
       id: '/(app)/problems/$problemId/'
@@ -250,6 +286,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/problems/create'
       preLoaderRoute: typeof AdminProblemsCreateIndexImport
       parentRoute: typeof AdminRouteImport
+    }
+    '/(app)/problems/$problemId/submissions/': {
+      id: '/(app)/problems/$problemId/submissions/'
+      path: '/'
+      fullPath: '/problems/$problemId/submissions/'
+      preLoaderRoute: typeof appProblemsProblemIdSubmissionsIndexImport
+      parentRoute: typeof appProblemsProblemIdSubmissionsRouteImport
     }
     '/admin/problems/$id/complete/': {
       id: '/admin/problems/$id/complete/'
@@ -278,11 +321,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface appProblemsProblemIdSubmissionsRouteRouteChildren {
+  appProblemsProblemIdSubmissionsIndexRoute: typeof appProblemsProblemIdSubmissionsIndexRoute
   appProblemsProblemIdSubmissionsIdIndexRoute: typeof appProblemsProblemIdSubmissionsIdIndexRoute
 }
 
 const appProblemsProblemIdSubmissionsRouteRouteChildren: appProblemsProblemIdSubmissionsRouteRouteChildren =
   {
+    appProblemsProblemIdSubmissionsIndexRoute:
+      appProblemsProblemIdSubmissionsIndexRoute,
     appProblemsProblemIdSubmissionsIdIndexRoute:
       appProblemsProblemIdSubmissionsIdIndexRoute,
   }
@@ -312,11 +358,15 @@ const appProblemsProblemIdRouteRouteWithChildren =
 interface appRouteRouteChildren {
   appIndexRoute: typeof appIndexRoute
   appProblemsProblemIdRouteRoute: typeof appProblemsProblemIdRouteRouteWithChildren
+  appProfileIndexRoute: typeof appProfileIndexRoute
+  appListsIdIndexRoute: typeof appListsIdIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appIndexRoute: appIndexRoute,
   appProblemsProblemIdRouteRoute: appProblemsProblemIdRouteRouteWithChildren,
+  appProfileIndexRoute: appProfileIndexRoute,
+  appListsIdIndexRoute: appListsIdIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -372,11 +422,14 @@ export interface FileRoutesByFullPath {
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/problems/$problemId': typeof appProblemsProblemIdRouteRouteWithChildren
+  '/profile': typeof appProfileIndexRoute
   '/admin/problems': typeof AdminProblemsIndexRoute
   '/problems/$problemId/submissions': typeof appProblemsProblemIdSubmissionsRouteRouteWithChildren
+  '/lists/$id': typeof appListsIdIndexRoute
   '/problems/$problemId/': typeof appProblemsProblemIdIndexRoute
   '/admin/problems/$id': typeof AdminProblemsIdIndexRoute
   '/admin/problems/create': typeof AdminProblemsCreateIndexRoute
+  '/problems/$problemId/submissions/': typeof appProblemsProblemIdSubmissionsIndexRoute
   '/admin/problems/$id/complete': typeof AdminProblemsIdCompleteIndexRoute
   '/admin/problems/$id/validate': typeof AdminProblemsIdValidateIndexRoute
   '/problems/$problemId/submissions/$id': typeof appProblemsProblemIdSubmissionsIdIndexRoute
@@ -390,11 +443,13 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/profile': typeof appProfileIndexRoute
   '/admin/problems': typeof AdminProblemsIndexRoute
-  '/problems/$problemId/submissions': typeof appProblemsProblemIdSubmissionsRouteRouteWithChildren
+  '/lists/$id': typeof appListsIdIndexRoute
   '/problems/$problemId': typeof appProblemsProblemIdIndexRoute
   '/admin/problems/$id': typeof AdminProblemsIdIndexRoute
   '/admin/problems/create': typeof AdminProblemsCreateIndexRoute
+  '/problems/$problemId/submissions': typeof appProblemsProblemIdSubmissionsIndexRoute
   '/admin/problems/$id/complete': typeof AdminProblemsIdCompleteIndexRoute
   '/admin/problems/$id/validate': typeof AdminProblemsIdValidateIndexRoute
   '/problems/$problemId/submissions/$id': typeof appProblemsProblemIdSubmissionsIdIndexRoute
@@ -412,11 +467,14 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/(app)/': typeof appIndexRoute
   '/(app)/problems/$problemId': typeof appProblemsProblemIdRouteRouteWithChildren
+  '/(app)/profile/': typeof appProfileIndexRoute
   '/admin/problems/': typeof AdminProblemsIndexRoute
   '/(app)/problems/$problemId/submissions': typeof appProblemsProblemIdSubmissionsRouteRouteWithChildren
+  '/(app)/lists/$id/': typeof appListsIdIndexRoute
   '/(app)/problems/$problemId/': typeof appProblemsProblemIdIndexRoute
   '/admin/problems/$id/': typeof AdminProblemsIdIndexRoute
   '/admin/problems/create/': typeof AdminProblemsCreateIndexRoute
+  '/(app)/problems/$problemId/submissions/': typeof appProblemsProblemIdSubmissionsIndexRoute
   '/admin/problems/$id/complete/': typeof AdminProblemsIdCompleteIndexRoute
   '/admin/problems/$id/validate/': typeof AdminProblemsIdValidateIndexRoute
   '/(app)/problems/$problemId/submissions/$id/': typeof appProblemsProblemIdSubmissionsIdIndexRoute
@@ -433,11 +491,14 @@ export interface FileRouteTypes {
     | '/admin/submissions'
     | '/admin/users'
     | '/problems/$problemId'
+    | '/profile'
     | '/admin/problems'
     | '/problems/$problemId/submissions'
+    | '/lists/$id'
     | '/problems/$problemId/'
     | '/admin/problems/$id'
     | '/admin/problems/create'
+    | '/problems/$problemId/submissions/'
     | '/admin/problems/$id/complete'
     | '/admin/problems/$id/validate'
     | '/problems/$problemId/submissions/$id'
@@ -450,11 +511,13 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/submissions'
     | '/admin/users'
+    | '/profile'
     | '/admin/problems'
-    | '/problems/$problemId/submissions'
+    | '/lists/$id'
     | '/problems/$problemId'
     | '/admin/problems/$id'
     | '/admin/problems/create'
+    | '/problems/$problemId/submissions'
     | '/admin/problems/$id/complete'
     | '/admin/problems/$id/validate'
     | '/problems/$problemId/submissions/$id'
@@ -470,11 +533,14 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/(app)/'
     | '/(app)/problems/$problemId'
+    | '/(app)/profile/'
     | '/admin/problems/'
     | '/(app)/problems/$problemId/submissions'
+    | '/(app)/lists/$id/'
     | '/(app)/problems/$problemId/'
     | '/admin/problems/$id/'
     | '/admin/problems/create/'
+    | '/(app)/problems/$problemId/submissions/'
     | '/admin/problems/$id/complete/'
     | '/admin/problems/$id/validate/'
     | '/(app)/problems/$problemId/submissions/$id/'
@@ -512,7 +578,9 @@ export const routeTree = rootRoute
       "filePath": "(app)/route.tsx",
       "children": [
         "/(app)/",
-        "/(app)/problems/$problemId"
+        "/(app)/problems/$problemId",
+        "/(app)/profile/",
+        "/(app)/lists/$id/"
       ]
     },
     "/(auth)": {
@@ -567,6 +635,10 @@ export const routeTree = rootRoute
         "/(app)/problems/$problemId/"
       ]
     },
+    "/(app)/profile/": {
+      "filePath": "(app)/profile/index.tsx",
+      "parent": "/(app)"
+    },
     "/admin/problems/": {
       "filePath": "admin/problems/index.tsx",
       "parent": "/admin"
@@ -575,8 +647,13 @@ export const routeTree = rootRoute
       "filePath": "(app)/problems/$problemId/submissions/route.tsx",
       "parent": "/(app)/problems/$problemId",
       "children": [
+        "/(app)/problems/$problemId/submissions/",
         "/(app)/problems/$problemId/submissions/$id/"
       ]
+    },
+    "/(app)/lists/$id/": {
+      "filePath": "(app)/lists/$id/index.tsx",
+      "parent": "/(app)"
     },
     "/(app)/problems/$problemId/": {
       "filePath": "(app)/problems/$problemId/index.tsx",
@@ -589,6 +666,10 @@ export const routeTree = rootRoute
     "/admin/problems/create/": {
       "filePath": "admin/problems/create/index.tsx",
       "parent": "/admin"
+    },
+    "/(app)/problems/$problemId/submissions/": {
+      "filePath": "(app)/problems/$problemId/submissions/index.tsx",
+      "parent": "/(app)/problems/$problemId/submissions"
     },
     "/admin/problems/$id/complete/": {
       "filePath": "admin/problems/$id/complete/index.tsx",

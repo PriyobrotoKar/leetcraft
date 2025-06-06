@@ -2,24 +2,10 @@ import { Problem } from '@leetcraft/db';
 import { Button } from '@leetcraft/ui/components/button';
 import { IconCheck, IconStar } from '@tabler/icons-react';
 import { ColumnDef, Getter } from '@tanstack/react-table';
-import AddToPlaylistDropdown from './AddToPlaylistDropdown';
 
 export const columns: ColumnDef<
   Pick<Problem, 'id' | 'title' | 'difficulty' | 'tags'>
 >[] = [
-  {
-    id: 'status',
-    size: 50,
-    cell: ({ getValue }) => {
-      return (
-        <span className="inline-flex w-full justify-center" role="checkbox">
-          {!!getValue() && <IconCheck className="text-green-500" />}
-        </span>
-      );
-    },
-    enableHiding: false,
-    enableSorting: false,
-  },
   {
     accessorKey: 'title',
     header: 'Name',
@@ -55,15 +41,6 @@ export const columns: ColumnDef<
           {difficulty.charAt(0) + difficulty.slice(1).toLowerCase()}
         </div>
       );
-    },
-  },
-  {
-    id: 'addToPlaylist',
-    size: 50,
-    cell: ({ row }) => {
-      const problemId = row.original.id;
-
-      return <AddToPlaylistDropdown problemId={problemId} />;
     },
   },
 ];

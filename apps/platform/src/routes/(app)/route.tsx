@@ -18,7 +18,7 @@ function DashboardLayout() {
   return (
     <div className="flex h-svh gap-3 p-5">
       <Sidebar />
-      <div className="bg-surface flex-1 rounded-lg border px-6 py-5">
+      <div className="bg-surface flex-1 basis-0 rounded-lg border px-6 py-5">
         <Outlet />
       </div>
     </div>

@@ -10,6 +10,13 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export function isValidURL(url: string) {
+  const res = url.match(
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+  );
+  return res !== null;
+}
+
 export function getDifficultyColor(difficulty: Difficulty): string {
   switch (difficulty) {
     case 'EASY':

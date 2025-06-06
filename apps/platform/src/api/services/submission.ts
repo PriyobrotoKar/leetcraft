@@ -23,8 +23,8 @@ class SubmissionService {
     return this.apiClient.post<{ submissionId: string }>('/', data);
   }
 
-  static async getAllSubmissionsOfProblem(problemId: string) {
-    return this.apiClient.get<Submission[]>(`/?problemId=${problemId}`);
+  static async getAllSubmissions(filters?: { problemId?: string }) {
+    return this.apiClient.get<Submission[]>('/', filters);
   }
 
   static async getSubmissionById(id: string) {
@@ -32,6 +32,12 @@ class SubmissionService {
       submission: SubmissionWithTestcases;
       pending: boolean;
     }>(`/${id}`);
+  }
+
+  static async getStreak() {
+    return this.apiClient.get<{ date: string; count: number; level: number }[]>(
+      '/streak',
+    );
   }
 }
 

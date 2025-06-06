@@ -8,17 +8,20 @@ import {
   IconCpu,
 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 
 interface SubmissionListsProps {
   problemId: string;
 }
 
 function SubmissionList({ problemId }: SubmissionListsProps) {
+  const { id } = useParams({
+    strict: false,
+  });
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['problem', problemId, 'submissions'],
-    queryFn: async () =>
-      SubmissionService.getAllSubmissionsOfProblem(problemId),
+    queryFn: async () => SubmissionService.getAllSubmissions({ problemId }),
   });
 
   if (isLoading) {
@@ -30,9 +33,9 @@ function SubmissionList({ problemId }: SubmissionListsProps) {
   }
 
   return (
-    <div className="bg-card focus-within:ring-ring/50 overflow-hidden rounded-md border focus-within:ring-1">
+    <div className="bg-card focus-within:ring-ring/50 flex flex-col overflow-hidden rounded-md border focus-within:ring-1">
       <div className="bg-tertiary text-md border-b p-3">Submissions</div>
-      <div className="space-y-2 overflow-auto p-3">
+      <div className="flex-1 basis-0 space-y-2 overflow-auto p-3">
         {data.map((submission) => {
           return (
             <Link
@@ -43,7 +46,11 @@ function SubmissionList({ problemId }: SubmissionListsProps) {
                 id: submission.id,
               }}
             >
-              <SubmissionCard submission={submission} key={submission.id} />
+              <SubmissionCard
+                activeId={id}
+                submission={submission}
+                key={submission.id}
+              />
             </Link>
           );
         })}
@@ -54,9 +61,10 @@ function SubmissionList({ problemId }: SubmissionListsProps) {
 
 interface SubmissionCardProps {
   submission: Submission;
+  activeId?: string;
 }
 
-function SubmissionCard({ submission }: SubmissionCardProps) {
+function SubmissionCard({ submission, activeId }: SubmissionCardProps) {
   const isAccepted = submission.status ? submission.status <= 3 : false;
 
   return (
@@ -64,9 +72,10 @@ function SubmissionCard({ submission }: SubmissionCardProps) {
       className={cn(
         'border-l-destructive bg-tertiary flex items-center justify-between gap-4 rounded-md border-l p-2',
         isAccepted && 'border-l-green-500',
+        activeId === submission.id && 'bg-border',
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex flex-1 items-center gap-2">
         {isAccepted ? (
           <IconCircleCheck className={'size-8 text-green-500'} />
         ) : (
@@ -87,12 +96,12 @@ function SubmissionCard({ submission }: SubmissionCardProps) {
         {submission.language}
       </div>
       <div className="space-y-1">
-        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+        <div className="text-muted-foreground flex items-center gap-1 text-sm">
           <IconClockHour4 className="size-4" /> {submission.time} ms
         </div>
-        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+        <div className="text-muted-foreground flex items-center gap-1 text-sm">
           <IconCpu className="size-4" />{' '}
-          {((submission.memory ?? 0) / Math.pow(2, 20)).toFixed(2)} mb
+          {((submission.memory ?? 0) / Math.pow(2, 10)).toFixed(2)} kb
         </div>
       </div>
     </div>

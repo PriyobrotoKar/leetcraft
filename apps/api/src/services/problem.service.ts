@@ -208,6 +208,59 @@ class ProblemService {
     return problem;
   }
 
+  async getAllProblemsSolvedByUser(currentUser: CurrentUser) {
+    const problems = await db.problem.findMany({
+      where: {
+        solvedBy: {
+          some: {
+            id: currentUser.id,
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        difficulty: true,
+        tags: true,
+      },
+    });
+    const grouped = await db.problem.groupBy({
+      by: ['difficulty'],
+      _count: { _all: true },
+    });
+
+    const result = {
+      total: grouped.reduce((acc, g) => acc + g._count._all, 0),
+      easy: grouped.find((g) => g.difficulty === 'EASY')?._count._all || 0,
+      medium: grouped.find((g) => g.difficulty === 'MEDIUM')?._count._all || 0,
+      hard: grouped.find((g) => g.difficulty === 'HARD')?._count._all || 0,
+    };
+
+    const stats = {
+      problems: {
+        total: result.total,
+        solved: problems.length,
+      },
+      easy: {
+        total: result.easy,
+        solved: problems.filter((p) => p.difficulty === 'EASY').length,
+      },
+      medium: {
+        total: result.medium,
+        solved: problems.filter((p) => p.difficulty === 'MEDIUM').length,
+      },
+      hard: {
+        total: result.hard,
+        solved: problems.filter((p) => p.difficulty === 'HARD').length,
+      },
+    };
+
+    return {
+      problems,
+      stats,
+    };
+  }
+
   async getProblemsCreatedByUser(currentUser: CurrentUser) {
     const problems = await db.problem.findMany({
       where: {
