@@ -1,0 +1,47 @@
+---
+import { IconStarFilled } from '@tabler/icons-react';
+import { Accordion } from './Accordion';
+import type { defineScriptVars } from 'astro/compiler-runtime';
+
+const questions = [
+  {
+    title: 'What is this platform about?',
+    description:
+      'Our platform helps developers practice coding problems, improve algorithmic thinking, and prepare for technical interviews—all in a fast, distraction-free coding environment.',
+  },
+  {
+    title: 'Do I need to install anything to use it?',
+    description:
+      'Nope! Everything runs in your browser. You can solve problems, run code, and track progress without installing a single thing.',
+  },
+  {
+    title: 'How do I track my progress?',
+    description:
+      'You can view your progress on the dashboard, which shows completed problems, streaks, and overall performance metrics.',
+  },
+  {
+    title: 'Is there a community or support available?',
+    description:
+      'Yes! We have a vibrant community where you can ask questions, share solutions, and get help from fellow developers.',
+  },
+  {
+    title: 'Can I contribute to the platform?',
+    description:
+      'Absolutely! We welcome contributions from developers. Check out our GitHub repository for more details on how to get involved.',
+  },
+];
+---
+
+<section class="text-center max-w-2xl space-y-20 mx-auto">
+  <div class="space-y-7">
+    <div class="flex justify-center gap-2 items-center">
+      <IconStarFilled className="text-yellow-400" />
+      <p class="text-muted-foreground">Product Overview</p>
+    </div>
+    <h2 class="text-5xl font-semibold">Frequently Asked Questions</h2>
+  </div>
+
+  <div class="text-left">
+    <Accordion data={questions} client:load />
+  </div>
+</section>

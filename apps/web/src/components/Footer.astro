@@ -1,0 +1,90 @@
+---
+import {
+  IconMail,
+  IconBrandGithubFilled,
+  IconBrandLinkedinFilled,
+  IconBrandX,
+} from '@tabler/icons-react';
+
+const navlinks = [
+  {
+    title: 'Home',
+    href: '/',
+  },
+  {
+    title: 'Problems',
+    href: '/problems',
+  },
+  {
+    title: 'Leaderboard',
+    href: '/leaderboard',
+  },
+  {
+    title: 'About',
+    href: '/about',
+  },
+];
+
+const socials = [
+  {
+    label: IconBrandGithubFilled,
+    link: 'https://github.com/priyobrotokar',
+  },
+  {
+    label: IconBrandLinkedinFilled,
+    link: 'https://linkedin.com/in/priyobrotokar',
+  },
+  {
+    label: IconBrandX,
+    link: 'https://x.com/@priyobrotokar',
+  },
+];
+---
+
+<footer class="border-t py-20">
+  <div class="max-w-5xl mx-auto flex gap-20">
+    <div class="flex flex-col justify-between flex-1">
+      <div class="space-y-2">
+        <div>
+          <div
+            class="flex max-w-20 font-semibold gap-2 text-[1.25rem] leading-tight"
+          >
+            <img src="/logo.svg" width={48} height={48} alt="Logo" />
+            Leet Craft
+          </div>
+        </div>
+        <!-- <div>Level Up Through Real Practice.</div> -->
+      </div>
+      <div class="text-muted-foreground flex gap-2 items-center">
+        <IconMail />
+        <span>support@leetcraft.xyz</span>
+      </div>
+    </div>
+    <div class="space-y-4">
+      <h3 class="text-base-ui-medium">Quick Navigation</h3>
+      <nav class="text-base-ui-medium">
+        <ul class="flex flex-col text-muted-foreground gap-2">
+          {
+            navlinks.map((link) => (
+              <li>
+                <a href={link.href}>{link.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+    <div class="space-y-4">
+      <h3 class="text-base-ui-medium">Social Handles</h3>
+      <div class="flex gap-4">
+        {
+          socials.map((social) => (
+            <a href={social.link} target="_blank" rel="noopener noreferrer">
+              <social.label className="h-6 w-6" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>
