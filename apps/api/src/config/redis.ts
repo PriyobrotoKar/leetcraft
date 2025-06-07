@@ -4,6 +4,8 @@ import logger from './logger';
 const redisConfig: RedisOptions = {
   port: Number(process.env.REDIS_PORT) || 6378,
   host: process.env.REDIS_HOST || 'localhost',
+  username: process.env.REDIS_USERNAME || '',
+  password: process.env.REDIS_PASSWORD || '',
   maxRetriesPerRequest: 3,
 };
 
