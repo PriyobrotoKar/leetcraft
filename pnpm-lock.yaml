@@ -105,6 +105,9 @@ importers:
       '@leetcraft/boilerplate-generator':
         specifier: workspace:*
         version: link:../../packages/boilerplate-generator
+      '@leetcraft/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@leetcraft/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -172,9 +175,6 @@ importers:
         specifier: ^3.24.3
         version: 3.24.3
     devDependencies:
-      '@leetcraft/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       '@leetcraft/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
