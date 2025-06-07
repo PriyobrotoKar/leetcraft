@@ -3,7 +3,6 @@ import { useState } from 'react';
 import NightOwl from 'monaco-themes/themes/Night Owl.json';
 import {
   SupportedLanguage,
-  supportedLanguages,
 } from '@leetcraft/boilerplate-generator';
 import { Boilerplate } from '@leetcraft/db';
 import {
@@ -34,8 +33,11 @@ function CodeEditor({
 }: CodeEditorProps) {
   const [editorReady, setEditorReady] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<SupportedLanguage>(
-    supportedLanguages[0].language,
+    'javascript',
   );
+
+  const supportedLanguages = boilerplates? boilerplates.map((b) => b.language):['javascript']
+
   const getBoilerplateForLang = (language: SupportedLanguage) =>
     boilerplates?.find((b) => b.language === language)?.shortCode || '';
 
@@ -76,8 +78,8 @@ function CodeEditor({
               <SelectContent>
                 {supportedLanguages.map((lang) => {
                   return (
-                    <SelectItem value={lang.language}>
-                      {lang.language}
+                    <SelectItem value={lang}>
+                      {lang}
                     </SelectItem>
                   );
                 })}
