@@ -277,6 +277,9 @@ importers:
       '@leetcraft/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      prisma:
+        specifier: ^6.6.0
+        version: 6.7.0(typescript@5.8.3)
       prisma-json-types-generator:
         specifier: ^3.3.1
         version: 3.3.1(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)
