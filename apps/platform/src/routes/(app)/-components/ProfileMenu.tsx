@@ -42,7 +42,7 @@ function ProfileMenu({ user }: ProfileMenuProps) {
               </Avatar>
               <div className="flex flex-col text-left">
                 <div>{user?.name}</div>
-                <div className="text-muted-foreground text-sm">
+                <div className="text-muted-foreground line-clamp-1 text-sm">
                   {user?.email}
                 </div>
               </div>

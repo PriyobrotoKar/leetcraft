@@ -1,4 +1,5 @@
 import BaseTemplate from '@/templates/base.template';
+import JavaTemplate from '@/templates/java.template';
 import JavascriptTemplate from '@/templates/javascript.template';
 import PythonTemplate from '@/templates/python.template';
 import {
@@ -14,6 +15,7 @@ const TEMPLATE_REGISTRY: Record<
 > = {
   python: PythonTemplate,
   javascript: JavascriptTemplate,
+  java: JavaTemplate,
 };
 
 class Generator {

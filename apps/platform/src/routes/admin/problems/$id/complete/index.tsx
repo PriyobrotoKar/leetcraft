@@ -13,6 +13,7 @@ export const Route = createFileRoute('/admin/problems/$id/complete/')({
 
 function RouteComponent() {
   const { testcases } = Route.useSearch();
+  const { id } = Route.useParams();
 
   return (
     <div className="flex min-h-full flex-col gap-10">
@@ -41,7 +42,11 @@ function RouteComponent() {
           >
             Dashboard
           </Link>
-          <Link to="/" className={cn(buttonVariants({ variant: 'default' }))}>
+          <Link
+            to="/problems/$problemId"
+            params={{ problemId: id }}
+            className={cn(buttonVariants({ variant: 'default' }))}
+          >
             View Problem
           </Link>
         </div>

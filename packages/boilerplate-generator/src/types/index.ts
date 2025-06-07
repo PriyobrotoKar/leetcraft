@@ -7,6 +7,10 @@ export const supportedLanguages = [
     id: 71,
     language: 'python',
   },
+  {
+    id: 62,
+    language: 'java',
+  },
 ] as const;
 
 export type LanguageConfig = (typeof supportedLanguages)[number];

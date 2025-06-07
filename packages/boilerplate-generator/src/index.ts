@@ -9,6 +9,8 @@ export const parseProblemStructure = (structure: string) => {
 export const generateBoilerplates = (structure: string) => {
   const parsedStruct = ProblemParser.parse(structure);
 
+  console.log('Parsed Structure:', parsedStruct);
+
   const generator = new Generator(parsedStruct);
   const boilerplates = generator.generate();
 

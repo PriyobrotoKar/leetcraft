@@ -93,7 +93,11 @@ class ProblemParser {
     if (parsedData.return_type.includes('[]')) {
       parsedData.return_type = parsedData.return_type.replace('[]', '');
       parsedData.return_type = `array<${paramToTypeMap[parsedData.return_type as ValidTypes]}>`;
+    } else {
+      parsedData.return_type =
+        paramToTypeMap[parsedData.return_type as ValidTypes];
     }
+
     const returnType = parsedData.return_type;
 
     return {
