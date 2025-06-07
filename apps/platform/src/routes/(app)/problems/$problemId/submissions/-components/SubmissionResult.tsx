@@ -86,6 +86,23 @@ function SubmissionResult({ submission }: SubmissionResultProps) {
         </div>
       )}
 
+      <div className="flex gap-4">
+        <div className="flex-1 space-y-4 rounded-md border p-4">
+          <h3>Runtime</h3>
+          <div className="text-lg">
+            {submission.time}{' '}
+            <span className="text-muted-foreground text-base-ui">ms</span>
+          </div>
+        </div>
+        <div className="flex-1 space-y-4 rounded-md border p-4">
+          <h3>Memory</h3>
+          <div className="text-lg">
+            {((submission.memory || 0) / Math.pow(2, 10)).toFixed(2)}{' '}
+            <span className="text-muted-foreground text-base-ui">kb</span>
+          </div>
+        </div>
+      </div>
+
       <CodeEditor
         value={submission.solution}
         language={submission.language as SupportedLanguage}

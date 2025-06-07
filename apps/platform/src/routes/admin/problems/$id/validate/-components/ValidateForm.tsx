@@ -17,7 +17,7 @@ import ExecuteCodeService, {
   ExecuteCodeResponse,
 } from '@/api/services/execute-code';
 import { pollWithRetry } from '@/lib/utils';
-import { IconCircleX } from '@tabler/icons-react';
+import { IconCircleX, IconLoader2 } from '@tabler/icons-react';
 import { useNavigate } from '@tanstack/react-router';
 
 interface ValidateFormProps {
@@ -37,7 +37,7 @@ function ValidateForm({ id }: ValidateFormProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isPending, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['problem', id],
     queryFn: () => ProblemService.getProblemById(id),
   });
@@ -84,8 +84,13 @@ function ValidateForm({ id }: ValidateFormProps) {
     },
   });
 
-  if (isPending) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    // TODO: Add a loading spinner or skeleton
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (error || !data) {

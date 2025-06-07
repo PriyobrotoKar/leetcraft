@@ -32,7 +32,7 @@ function ListInfo({ playlistId }: ListInfoProps) {
 
   if (isLoading) {
     // TODO: Add a loading spinner or skeleton
-    return <div>Loading...</div>;
+    return null;
   }
 
   if (isError || !data) {

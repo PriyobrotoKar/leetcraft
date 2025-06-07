@@ -1,3 +1,5 @@
+import { sleep } from '@/lib/utils';
+
 class ApiClient {
   private baseUrl: string = import.meta.env.VITE_BACKEND_URL + '/api/v1';
 
@@ -11,6 +13,7 @@ class ApiClient {
     options?: RequestInit,
   ): Promise<T> {
     try {
+      // await sleep(10000);
       const queryString =
         params && Object.keys(params).length
           ? '?' + new URLSearchParams(params).toString()

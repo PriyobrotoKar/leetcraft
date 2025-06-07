@@ -1,7 +1,7 @@
 import ioredis, { RedisOptions } from 'ioredis';
 import logger from './logger';
 
-const port = process.env.REDIS_PORT ?? 6379;
+const port = process.env.REDIS_PORT ?? 6378;
 const host = process.env.REDIS_HOST ?? 'localhost';
 
 const redisConfig: RedisOptions = {

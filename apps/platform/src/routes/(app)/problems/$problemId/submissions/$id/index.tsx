@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import SubmissionResult from '../-components/SubmissionResult';
 import SubmissionService from '@/api/services/submission';
+import { IconLoader2 } from '@tabler/icons-react';
 
 export const Route = createFileRoute(
   '/(app)/problems/$problemId/submissions/$id/',
@@ -18,7 +19,11 @@ function RouteComponent() {
   });
 
   if (isLoading) {
-    return <div>Loading submission...</div>;
+    return (
+      <div className="flex h-full flex-1 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (isError || !data) {

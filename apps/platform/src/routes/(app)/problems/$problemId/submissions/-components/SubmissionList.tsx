@@ -6,6 +6,7 @@ import {
   IconCircleX,
   IconClockHour4,
   IconCpu,
+  IconLoader2,
 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
@@ -25,7 +26,11 @@ function SubmissionList({ problemId }: SubmissionListsProps) {
   });
 
   if (isLoading) {
-    return <div>Loading submissions...</div>;
+    return (
+      <div className="flex min-w-80 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (isError || !data) {

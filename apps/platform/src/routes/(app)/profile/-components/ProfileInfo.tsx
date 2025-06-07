@@ -12,6 +12,7 @@ import {
   IconBrandLinkedin,
   IconEdit,
   IconGlobe,
+  IconLoader2,
   IconLocation,
   IconMapPin,
   IconWorld,
@@ -59,7 +60,11 @@ function ProfileInfo() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-full min-w-80 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (isError || !data) {

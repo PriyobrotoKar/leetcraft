@@ -9,9 +9,9 @@ export const Route = createFileRoute('/(app)/profile/')({
 
 function RouteComponent() {
   return (
-    <div className="flex gap-4">
+    <div className="flex h-full gap-4">
       <ProfileInfo />
-      <div className="flex-1 basis-0 space-y-8">
+      <div className="flex h-full flex-1 basis-0 flex-col gap-8">
         <Activity />
         <SubmissionTable />
       </div>

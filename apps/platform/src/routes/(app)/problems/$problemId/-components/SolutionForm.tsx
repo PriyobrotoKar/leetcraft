@@ -1,12 +1,12 @@
-import { ExecuteCodePayload } from '@/api/services/execute-code';
 import ProblemService from '@/api/services/problem';
 import { useSolution } from '@/providers/SolutionProvider';
 import TestCases from '@/routes/admin/problems/$id/validate/-components/TestCases';
 import CodeEditor from '@/routes/admin/problems/create/-components/CodeEditor';
 import MarkdownTextarea from '@/routes/admin/problems/create/-components/MarkdownTextarea';
 import { supportedLanguages } from '@leetcraft/boilerplate-generator';
+import { IconLoader2 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { SetStateAction, useEffect } from 'react';
+import { useEffect } from 'react';
 
 interface SolutionFormProps {
   id: string;
@@ -33,7 +33,11 @@ function SolutionForm({ id }: SolutionFormProps) {
   }, [data]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (error || !data) {

@@ -2,6 +2,7 @@ import ProblemService from '@/api/services/problem';
 import { useQuery } from '@tanstack/react-query';
 import DataTable from './DataTable';
 import Stats from './Stats';
+import { IconLoader2 } from '@tabler/icons-react';
 
 function SubmissionTable() {
   const { data, isLoading, isError } = useQuery({
@@ -11,7 +12,11 @@ function SubmissionTable() {
 
   if (isLoading) {
     // TODO: Add a loading spinner or skeleton
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (isError || !data) {

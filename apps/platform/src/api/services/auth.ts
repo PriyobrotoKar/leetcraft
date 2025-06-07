@@ -19,6 +19,10 @@ class AuthService {
   static async getMe() {
     return this.apiClient.get<User>('/me');
   }
+
+  static async logout() {
+    return this.apiClient.post('/logout');
+  }
 }
 
 export default AuthService;

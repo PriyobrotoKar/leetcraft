@@ -7,15 +7,44 @@ import {
   DropdownMenuTrigger,
 } from '@leetcraft/ui/components/dropdown-menu';
 import { Avatar, AvatarFallback } from '@leetcraft/ui/components/avatar';
-import { CurrentUser } from '@/providers/AuthProvider';
-import { IconLogout, IconSettings, IconUserCircle } from '@tabler/icons-react';
-import { Link } from '@tanstack/react-router';
+import { CurrentUser, useAuth } from '@/providers/AuthProvider';
+import {
+  IconDashboard,
+  IconLayout,
+  IconLogout,
+  IconSettings,
+  IconUserCircle,
+} from '@tabler/icons-react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { useMutation } from '@tanstack/react-query';
+import AuthService from '@/api/services/auth';
+import { toast } from 'sonner';
 
 interface ProfileMenuProps {
   user: CurrentUser | null;
 }
 
 function ProfileMenu({ user }: ProfileMenuProps) {
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate({
+    from: '/',
+  });
+
+  const mutation = useMutation({
+    mutationFn: async () => await AuthService.logout(),
+    onSuccess: () => {
+      setAuth({ user: null });
+      navigate({
+        to: '/login',
+      });
+    },
+    onError: () => {
+      console.error('Logout failed');
+      toast.error('Logout failed');
+    },
+  });
+
   return (
     <div>
       <DropdownMenu>
@@ -55,6 +84,14 @@ function ProfileMenu({ user }: ProfileMenuProps) {
               Profile
             </DropdownMenuItem>
           </Link>
+          {user?.role === 'ADMIN' && (
+            <Link to="/admin/dashboard">
+              <DropdownMenuItem>
+                <IconLayout />
+                Dashboard
+              </DropdownMenuItem>
+            </Link>
+          )}
           <Link to="/">
             <DropdownMenuItem>
               <IconSettings />
@@ -62,7 +99,11 @@ function ProfileMenu({ user }: ProfileMenuProps) {
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            onClick={() => mutation.mutate()}
+            variant="destructive"
+          >
             <IconLogout />
             Logout
           </DropdownMenuItem>

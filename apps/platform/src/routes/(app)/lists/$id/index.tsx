@@ -9,7 +9,7 @@ export const Route = createFileRoute('/(app)/lists/$id/')({
 
 function RouteComponent() {
   return (
-    <div className="space-y-10">
+    <div className="flex h-full flex-col gap-10">
       <Header
         title="Playlists"
         subtitle="Manage and Solve problems from custom lists"

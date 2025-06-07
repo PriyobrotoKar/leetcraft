@@ -8,7 +8,7 @@ export const columns: ColumnDef<PlaylistWithProblems['problems'][number]>[] = [
     id: 'status',
     size: 50,
     cell: ({ row }) => {
-      const isSolved = row.original.solvedBy.length === 1;
+      const isSolved = row.original.solvedBy?.length === 1;
       return (
         <span className="inline-flex w-full justify-center" role="checkbox">
           {isSolved && <IconCheck className="text-green-500" />}

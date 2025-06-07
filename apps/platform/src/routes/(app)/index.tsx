@@ -9,13 +9,13 @@ export const Route = createFileRoute('/(app)/')({
 
 function RouteComponent() {
   return (
-    <div className="space-y-10">
+    <div className="flex h-full flex-col space-y-10">
       <Header
         title="Problem Library"
         subtitle="Create, update, and organize coding problems across the platform"
       />
 
-      <div className="space-y-4">
+      <div className="flex flex-1 flex-col gap-4">
         <TableActions />
         <ProblemTable />
       </div>

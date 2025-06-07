@@ -1,6 +1,6 @@
 import PlaylistService from '@/api/services/playlist';
-import ProblemService from '@/api/services/problem';
 import DataTable from '@/routes/(app)/-components/DataTable';
+import { IconLoader2 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 
 interface ListProblemsProps {
@@ -15,7 +15,11 @@ function ListProblems({ playlistId }: ListProblemsProps) {
 
   if (isLoading) {
     // TODO: Add a loading spinner or skeleton
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (isError || !data) {

@@ -41,10 +41,10 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   return (
     <div className="min-w-60 space-y-6">
-      <div className="flex max-w-20 gap-2 text-[1.25rem] leading-tight">
+      <Link to="/" className="flex max-w-20 gap-2 text-[1.25rem] leading-tight">
         <img src="/logo.svg" width={48} height={48} alt="Logo" />
         Leet Craft
-      </div>
+      </Link>
 
       <nav>
         <ul>

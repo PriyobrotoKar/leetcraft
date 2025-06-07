@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Separator } from '@leetcraft/ui/components/separator';
-import { IconFolder } from '@tabler/icons-react';
+import { IconFolder, IconLoader2 } from '@tabler/icons-react';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import React from 'react';
 import CreateListDialog from './CreateListDialog';
@@ -58,7 +58,7 @@ export default function Sidebar() {
 
       <Separator />
 
-      <div className="flex-1 space-y-2">
+      <div className="flex flex-1 flex-col space-y-2">
         <div className="flex items-center justify-between px-2">
           <h3 className="text-md text-muted-foreground">My Lists</h3>
           <CreateListDialog />
@@ -83,7 +83,11 @@ function Playlists() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <IconLoader2 className="animate-spin" />
+      </div>
+    );
   }
 
   if (isError || !data) {
@@ -97,6 +101,7 @@ function Playlists() {
 
         return (
           <Link
+            key={playlist.id}
             to="/lists/$id"
             params={{ id: playlist.id }}
             className={cn(
