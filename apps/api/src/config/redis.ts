@@ -6,6 +6,7 @@ const redisConfig: RedisOptions = {
   host: process.env.REDIS_HOST || 'localhost',
   username: process.env.REDIS_USERNAME || '',
   password: process.env.REDIS_PASSWORD || '',
+  tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
   maxRetriesPerRequest: 3,
 };
 
