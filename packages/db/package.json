@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "generate": "pnpx prisma generate",
-    "migrate": "pnpx prisma migrate dev",
-    "migrate-deploy": "pnpx prisma migrate deploy",
-    "studio": "pnpx prisma studio",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "migrate-deploy": "prisma migrate deploy",
+    "studio": "prisma studio",
     "build": "pnpm generate && npx tsc"
   },
   "devDependencies": {
