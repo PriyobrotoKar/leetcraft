@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "@leetcraft/typescript-config": "workspace:*",
-    "prisma-json-types-generator": "^3.3.1"
+    "prisma-json-types-generator": "^3.3.1",
+    "prisma": "^6.6.0"
   },
   "keywords": [],
   "author": "",
