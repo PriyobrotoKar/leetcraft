@@ -1,13 +1,16 @@
 import ioredis, { RedisOptions } from 'ioredis';
 import logger from './logger';
 
+const port = process.env.REDIS_PORT ?? 6379;
+const host = process.env.REDIS_HOST ?? 'localhost';
+
 const redisConfig: RedisOptions = {
-  port: Number(process.env.REDIS_PORT) || 6378,
-  host: process.env.REDIS_HOST || 'localhost',
-  username: process.env.REDIS_USERNAME || '',
-  password: process.env.REDIS_PASSWORD || '',
-  tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
-  maxRetriesPerRequest: 3,
+  port: Number(port),
+  host,
+  username: process.env.REDIS_USERNAME,
+  password: process.env.REDIS_PASSWORD,
+  ...(!!process.env.REDIS_HOST && { tls: {} }),
+  maxRetriesPerRequest: null,
 };
 
 const redisConnection = new ioredis(redisConfig);
