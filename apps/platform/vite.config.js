@@ -21,7 +21,7 @@ export default defineConfig({
     },
     build: {
         commonjsOptions: {
-            include: ['@leetcraft/boilerplate-generator', /node_modules/],
+            include: [/boilerplate-generator/, /node_modules/],
         },
     },
 });
