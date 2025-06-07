@@ -4,7 +4,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { columns } from './Columns';
-import { Problem } from '@leetcraft/db';
+import { Prisma, Problem } from '@leetcraft/db';
 import {
   Table,
   TableBody,
@@ -17,7 +17,15 @@ import { cn } from '@leetcraft/ui/lib/utils';
 import { useNavigate } from '@tanstack/react-router';
 
 interface DataTableProps {
-  data: Problem[];
+  data: Prisma.ProblemGetPayload<{
+    select: {
+      id: true;
+      title: true;
+      difficulty: true;
+      tags: true;
+      solvedBy: true;
+    };
+  }>[];
 }
 
 function DataTable({ data }: DataTableProps) {

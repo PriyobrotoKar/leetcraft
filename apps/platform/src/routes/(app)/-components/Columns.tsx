@@ -1,19 +1,17 @@
-import { Problem } from '@leetcraft/db';
-import { Button } from '@leetcraft/ui/components/button';
-import { IconCheck, IconStar } from '@tabler/icons-react';
+import { IconCheck } from '@tabler/icons-react';
 import { ColumnDef, Getter } from '@tanstack/react-table';
 import AddToPlaylistDropdown from './AddToPlaylistDropdown';
+import { PlaylistWithProblems } from '@/api/services/playlist';
 
-export const columns: ColumnDef<
-  Pick<Problem, 'id' | 'title' | 'difficulty' | 'tags'>
->[] = [
+export const columns: ColumnDef<PlaylistWithProblems['problems'][number]>[] = [
   {
     id: 'status',
     size: 50,
-    cell: ({ getValue }) => {
+    cell: ({ row }) => {
+      const isSolved = row.original.solvedBy.length === 1;
       return (
         <span className="inline-flex w-full justify-center" role="checkbox">
-          {!!getValue() && <IconCheck className="text-green-500" />}
+          {isSolved && <IconCheck className="text-green-500" />}
         </span>
       );
     },

@@ -1,12 +1,24 @@
 import PlaylistService from '@/api/services/playlist';
-import { Button } from '@leetcraft/ui/components/button';
+import { cn } from '@/lib/utils';
+import { Button, buttonVariants } from '@leetcraft/ui/components/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from '@leetcraft/ui/components/dialog';
 import {
   IconEdit,
   IconPlayerPlayFilled,
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import UpdateListDialog from './UpdateListDialog';
 
 interface ListInfoProps {
   playlistId: string;
@@ -29,6 +41,20 @@ function ListInfo({ playlistId }: ListInfoProps) {
   }
 
   //TODO: Count problems by difficulty
+  const totalStats = {
+    easy: data.problems.filter((p) => p.difficulty === 'EASY').length,
+    medium: data.problems.filter((p) => p.difficulty === 'MEDIUM').length,
+    hard: data.problems.filter((p) => p.difficulty === 'HARD').length,
+  };
+
+  const solvedProblems = data.problems.filter((p) => p.solvedBy.length === 1);
+
+  const solvedStats = {
+    easy: solvedProblems.filter((p) => p.difficulty === 'EASY').length,
+    medium: solvedProblems.filter((p) => p.difficulty === 'MEDIUM').length,
+    hard: solvedProblems.filter((p) => p.difficulty === 'HARD').length,
+  };
+
   //TODO: Add Creator Name
 
   return (
@@ -43,19 +69,25 @@ function ListInfo({ playlistId }: ListInfoProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button size={'sm'}>
+          <Link
+            to={'/problems/$problemId'}
+            params={{
+              problemId: data.problems[0]?.id ?? '',
+            }}
+            className={cn(buttonVariants({ size: 'sm' }))}
+          >
             <IconPlayerPlayFilled />
             Practice
-          </Button>
-          <Button size={'icon'} variant={'tertiary'}>
-            <IconPlus />
-          </Button>
-          <Button size={'icon'} variant={'tertiary'}>
-            <IconEdit />
-          </Button>
-          <Button size={'icon'} variant={'tertiary'}>
-            <IconTrash />
-          </Button>
+          </Link>
+          <UpdateListDialog
+            playlist={data}
+            trigger={
+              <Button size={'icon'} variant={'tertiary'}>
+                <IconEdit />
+              </Button>
+            }
+          />
+          <DeleteListDialog playlistId={data.id} />
         </div>
       </div>
 
@@ -63,22 +95,22 @@ function ListInfo({ playlistId }: ListInfoProps) {
         <div className="flex h-full flex-1 flex-col justify-between rounded-md border p-4">
           <h3 className="text-green-500">Easy</h3>
           <div>
-            <span className="text-lg">4</span>/
-            <span className="text-muted-foreground">21</span>
+            <span className="text-lg">{solvedStats.easy}</span>/
+            <span className="text-muted-foreground">{totalStats.easy}</span>
           </div>
         </div>
         <div className="flex h-full flex-1 flex-col justify-between rounded-md border p-4">
           <h3 className="text-yellow-500">Medium</h3>
           <div>
-            <span className="text-lg">4</span>/
-            <span className="text-muted-foreground">21</span>
+            <span className="text-lg">{solvedStats.medium}</span>/
+            <span className="text-muted-foreground">{totalStats.medium}</span>
           </div>
         </div>
         <div className="flex h-full flex-1 flex-col justify-between rounded-md border p-4">
           <h3 className="text-destructive">Hard</h3>
           <div>
-            <span className="text-lg">4</span>/
-            <span className="text-muted-foreground">21</span>
+            <span className="text-lg">{solvedStats.hard}</span>/
+            <span className="text-muted-foreground">{totalStats.hard}</span>
           </div>
         </div>
       </div>
@@ -87,3 +119,58 @@ function ListInfo({ playlistId }: ListInfoProps) {
 }
 
 export default ListInfo;
+
+interface DeleteListDialogProps {
+  playlistId: string;
+}
+
+function DeleteListDialog({ playlistId }: DeleteListDialogProps) {
+  const navigate = useNavigate({
+    from: '/lists/$id',
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => await PlaylistService.deletePlaylist(playlistId),
+    onSuccess: () => {
+      navigate({ to: '/' });
+    },
+    onError: (error) => {
+      console.error('Error deleting playlist:', error);
+      toast.error('Failed to delete playlist. Please try again later.');
+    },
+  });
+
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <Button size={'icon'} variant={'tertiary'}>
+          <IconTrash />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="gap-6 sm:max-w-sm">
+        <DialogTitle>Are you sure?</DialogTitle>
+
+        <p className="text-md text-muted-foreground leading-normal">
+          This action will delete the playlist and remove all its associated
+          problems. This cannot be undone.
+        </p>
+
+        <DialogFooter className="">
+          <DialogClose>
+            <Button variant={'tertiary'} size={'sm'}>
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button
+            isLoading={isPending}
+            onClick={() => mutate()}
+            variant={'destructive'}
+            size={'sm'}
+          >
+            Confirm Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

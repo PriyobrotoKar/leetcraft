@@ -1,8 +1,19 @@
 import { Playlist, Prisma } from '@leetcraft/db';
 import ApiClient from '../client';
 
-type PlaylistWithProblems = Prisma.PlaylistGetPayload<{
-  include: { problems: true; creator: { select: { id: true; name: true } } };
+export type PlaylistWithProblems = Prisma.PlaylistGetPayload<{
+  include: {
+    problems: {
+      select: {
+        id: true;
+        title: true;
+        difficulty: true;
+        tags: true;
+        solvedBy: true;
+      };
+    };
+    creator: { select: { id: true; name: true } };
+  };
 }>;
 
 class PlaylistService {
@@ -35,6 +46,13 @@ class PlaylistService {
     return this.apiClient.delete(
       `/${playlistId}/problems?problemId=${problemId}`,
     );
+  }
+
+  static async updatePlaylist(
+    id: string,
+    data: { name?: string; description?: string },
+  ) {
+    return this.apiClient.patch<Playlist>(`/${id}`, data);
   }
 
   static async deletePlaylist(id: string) {

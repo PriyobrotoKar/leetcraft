@@ -6,3 +6,7 @@ export const CreatePlaylistSchema = z.object({
 });
 
 export type CreatePlaylistDto = z.infer<typeof CreatePlaylistSchema>;
+
+export const UpdatePlaylistSchema = CreatePlaylistSchema.partial();
+
+export type UpdatePlaylistDto = z.infer<typeof UpdatePlaylistSchema>;

@@ -12,7 +12,13 @@ class ProblemService {
   private static apiClient: ApiClient = new ApiClient('/problems');
 
   static async getProblems() {
-    return this.apiClient.get<Problem[]>('/');
+    return this.apiClient.get<
+      Prisma.ProblemGetPayload<{
+        include: {
+          solvedBy: true;
+        };
+      }>[]
+    >('/');
   }
 
   static async getProblemsCreated() {

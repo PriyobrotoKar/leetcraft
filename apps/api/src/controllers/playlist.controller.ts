@@ -1,4 +1,4 @@
-import { CreatePlaylistDto } from '@/dto/playlist.dto';
+import { CreatePlaylistDto, UpdatePlaylistDto } from '@/dto/playlist.dto';
 import PlaylistService from '@/services/playlist.service';
 import { HandleRequest } from '@/types/request';
 
@@ -60,12 +60,24 @@ class PlaylistController {
     res.status(200).json(result);
   };
 
+  updatePlaylist: HandleRequest<UpdatePlaylistDto, { id: string }> = async (
+    req,
+    res,
+  ) => {
+    const updatedPlaylist = await this.playlistService.updatePlaylist(
+      req.params.id,
+      req.body,
+      req.user,
+    );
+    res.status(200).json(updatedPlaylist);
+  };
+
   deletePlaylist: HandleRequest<never, { id: string }> = async (req, res) => {
     const result = await this.playlistService.deletePlaylist(
       req.params.id,
       req.user,
     );
-    res.status(204).json(result);
+    res.status(200).json(result);
   };
 }
 

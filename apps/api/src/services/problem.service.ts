@@ -183,10 +183,7 @@ class ProblemService {
       },
     });
 
-    return problems.map(({ solvedBy, ...problem }) => ({
-      ...problem,
-      isSolved: solvedBy.length > 0,
-    }));
+    return problems;
   }
 
   async getProblemById(problemId: string) {

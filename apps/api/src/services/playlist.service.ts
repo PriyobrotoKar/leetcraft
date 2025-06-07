@@ -1,4 +1,4 @@
-import { CreatePlaylistDto } from '@/dto/playlist.dto';
+import { CreatePlaylistDto, UpdatePlaylistDto } from '@/dto/playlist.dto';
 import { BadRequestError } from '@/lib/ApiError';
 import { CurrentUser } from '@/types/auth';
 import { db } from '@leetcraft/db';
@@ -91,6 +91,11 @@ class PlaylistService {
             title: true,
             difficulty: true,
             tags: true,
+            solvedBy: {
+              where: {
+                id: currentUser.id,
+              },
+            },
           },
         },
       },
@@ -158,6 +163,36 @@ class PlaylistService {
     });
 
     return { message: 'Problem added to playlist successfully' };
+  }
+
+  async updatePlaylist(
+    playlistId: string,
+    dto: UpdatePlaylistDto,
+    currentUser: CurrentUser,
+  ) {
+    // Check if the playlist exists and belongs to the user
+    const playlist = await db.playlist.findUnique({
+      where: {
+        id: playlistId,
+        creatorId: currentUser.id,
+      },
+    });
+
+    if (!playlist) {
+      throw new BadRequestError('Playlist not found or does not belong to you');
+    }
+
+    // Update the playlist
+    const updatedPlaylist = await db.playlist.update({
+      where: {
+        id: playlistId,
+      },
+      data: {
+        ...dto,
+      },
+    });
+
+    return updatedPlaylist;
   }
 
   async removeProblemFromPlaylist(

@@ -47,6 +47,13 @@ class ApiClient {
     });
   }
 
+  async patch<T>(url: string, body?: object, params?: Record<string, string>) {
+    return this.fetch<T>(url, params, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+  }
+
   async put<T>(url: string, body?: object, params?: Record<string, string>) {
     return this.fetch<T>(url, params, {
       method: 'PUT',
